@@ -1,0 +1,40 @@
+{
+  "id": {
+    "timestamp": 1714863853,
+    "date": "2024-05-04T23:04:13.000+00:00"
+  },
+  "formName": "Master Form",
+  "ownerId": "6636beed0e66743f9cefa30f",
+  "fields": [
+    {
+      "label": "First name",
+      "name": "firstname",
+      "type": "single-line-text",
+      "validation": {
+        "message": "Validation message first name",
+        "pattern": ".*",
+        "isRequired": true
+      }
+    },
+    {
+      "label": "Last name",
+      "name": "lastname",
+      "type": "single-line-text",
+      "validation": {
+        "message": "Validation message last name",
+        "pattern": ".*",
+        "isRequired": false
+      }
+    },
+    {
+      "label": "Test label",
+      "name": "label1",
+      "type": "label",
+      "validation": {
+        "message": "Validation message last name",
+        "pattern": ".*",
+        "isRequired": false
+      }
+    }
+  ]
+}
