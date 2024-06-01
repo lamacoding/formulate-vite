@@ -1,7 +1,14 @@
 import React from 'react'
+import SideMenuDashboard from '../SideMenuDashboard'
 
-export default function DashboardRoute() {
+export const DashboardRoute = () => {
+
   return (
-    <div>DashboardRoute</div>
+
+    <div>
+      <SideMenuDashboard />
+    </div>
   )
 }
+
+export default DashboardRoute;

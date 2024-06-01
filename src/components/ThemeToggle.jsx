@@ -23,7 +23,7 @@ export const ThemeToggle = styled(Switch)(({ theme }) => ({
       },
     },
     '& .MuiSwitch-thumb': {
-      backgroundColor: theme.palette.mode === 'dark' ? '#003892' : '#0ed67c',
+      backgroundColor: theme.palette.mode === 'dark' ? '#379369' : '#57c090',
       width: 32,
       height: 32,
       '&::before': {

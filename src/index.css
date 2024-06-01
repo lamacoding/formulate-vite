@@ -1,21 +1,53 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+  font-family: "Inter";
+  src: url("Inter-VariableFont_slnt,wght.ttf") format("truetype"); /* Adjust the path as necessary */
+  font-weight: normal;
+  font-style: normal;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@font-face {
+  font-family: "PublicSans";
+  src: url("PublicSans-VariableFont_wght.ttf") format("truetype"); /* Adjust the path as necessary */
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: "PublicSans", "Segoe UI", "Roboto", "Helvetica Neue",
+    "sans-serif";
 }
 
 .side-menu-item {
   text-transform: none !important;
   width: 100%;
+  height: 44px;
+  border-radius: 10px !important;
   text-align: left !important;
-  margin: 0 20px 2px 20px !important;
   padding: 0 25px !important;
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
 }
+
+.add-form-input {
+  height: 34px !important;
+  margin: 0px !important;
+}
+
+.side-menu-heading {
+  text-transform: uppercase !important;
+  font-size: 12px !important;
+  margin: 0 25px !important;
+  font-weight: bold !important;
+}
+
+
+
+
+
+
+
+

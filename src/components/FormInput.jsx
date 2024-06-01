@@ -1,17 +1,20 @@
-import React from 'react';
+import React from "react";
 import {
   Checkbox,
   FormControl,
   FormControlLabel,
-  FormGroup, FormLabel,
+  FormGroup,
+  FormLabel,
+  IconButton,
   InputLabel,
   MenuItem,
   Radio,
   RadioGroup,
   Select,
-  TextField
+  TextField,
 } from "@mui/material";
-import {DatePicker} from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers";
+import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 
 function renderInputField(field) {
   let isRequired = false;
@@ -21,57 +24,78 @@ function renderInputField(field) {
 
   switch (field.type) {
     case "label":
-      return (<p>{field.label}</p>);
+      return <p>{field.label}</p>;
 
     case "single-line-text":
-      return (<TextField fullWidth={true} label={field.label}
-                         id={field.name}
-                         required={isRequired}/>);
+      return (
+        <TextField
+          fullWidth={true}
+          label={field.label}
+          id={field.name}
+          required={isRequired}
+        />
+      );
 
     case "password":
-      return (<TextField label={field.label}
-                         id={field.name}
-                         type="password"
-                         required={isRequired}/>);
+      return (
+        <TextField
+          label={field.label}
+          id={field.name}
+          type="password"
+          required={isRequired}
+        />
+      );
 
     case "multi-line-text":
-      return (<TextField fullWidth={true}
-                         label={field.label}
-                         id={field.name}
-                         multiline
-                         rows={4}
-                         required={isRequired}/>);
+      return (
+        <TextField
+          fullWidth={true}
+          label={field.label}
+          id={field.name}
+          multiline
+          rows={4}
+          required={isRequired}
+        />
+      );
 
     case "checkbox":
       return (
-        <FormGroup>
-          {field.options.map(option => (
+        <FormGroup sx={{ width: "100%" }}>
+          {field.options.map((option) => (
             <FormControlLabel
-              control={<Checkbox/>}
+              control={<Checkbox />}
               label={option}
-              key={option.name}
+              key={option}
             />
           ))}
         </FormGroup>
-      )
+      );
 
     case "radio":
       return (
         <FormControl fullWidth={true}>
           <FormLabel id={field.name}>{field.label}</FormLabel>
           <RadioGroup aria-labelledby={field.name} name={field.name}>
-            {field.options.map(option => (
+            {field.options.map((option) => (
               <FormControlLabel
                 value={option}
-                control={<Radio/>} label={option}
-                key={option.name}></FormControlLabel>
+                control={<Radio />}
+                label={option}
+                key={option}
+              ></FormControlLabel>
             ))}
           </RadioGroup>
         </FormControl>
-      )
+      );
 
     case "date":
-      return <DatePicker format="DD.MM.YYYY" label={field.label + (isRequired && " *")}/>;
+      return (
+        <DatePicker
+          format="DD.MM.YYYY"
+          label={field.label + (isRequired && " *")}
+          sx={{ width: "100%" }}
+        />
+      );
 
     case "dropdown":
       return (
@@ -83,12 +107,13 @@ function renderInputField(field) {
             label={field.label}
           >
             {field.options.map((option, index) => (
-                <MenuItem value={option} key={index}>{option}</MenuItem>
+              <MenuItem value={option} key={index}>
+                {option}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
-      )
-        ;
+      );
 
     case "multi-select-dropdown":
       return null;
@@ -101,10 +126,17 @@ function renderInputField(field) {
   }
 }
 
-function FormInput({field, id}) {
+function FormInput({ field, id }) {
   return (
     <>
       {renderInputField(field)}
+      <IconButton
+        onClick={() => console.log("delete: " + field.name)}
+        sx={{ marginLeft: "14px", color: "secondary.main" }}
+      >
+        <DeleteTwoToneIcon />
+
+      </IconButton>
     </>
   );
 }

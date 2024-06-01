@@ -6,6 +6,7 @@ import FormInput from "./FormInput";
 import { CurrentFormContext } from "./routes/FormRoute";
 import { serverUri } from "../backendServerConfig";
 import AiPromptModal from "./AiPromptModal";
+import { Box } from "@mui/material";
 
 function FormEditor() {
   const currentFormId = useContext(CurrentFormContext);
@@ -35,16 +36,24 @@ function FormEditor() {
   }
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        margin: "0 auto",
+        width: "70%",
+        backgroundColor: "background.paper",
+        border: "0px solid",
+        borderColor: "primary.main",
+        borderRadius: "20px",
+        padding: "20px 80px",
+        transition: "box-shadow 0.3s",
       }}
     >
       <h1>{schema["formName"]}</h1>
-      <form>
+      <form style={{ width: "100%" }}>
         {schema["fields"].map((field, i) => (
           <div
             style={{
@@ -60,7 +69,7 @@ function FormEditor() {
         ))}
       </form>
       <AiPromptModal />
-    </div>
+    </Box>
   );
 }
 

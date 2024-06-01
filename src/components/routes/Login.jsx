@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, Box, CircularProgress, TextField } from "@mui/material";
 import { serverUri } from "../../backendServerConfig";
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/formulate.svg";
+import logo from "../../assets/logo.svg";
 import { LoadingButton } from "@mui/lab";
 import { checkIsAuthenticated } from "../../js/checkAuth";
 import { Navigate } from "react-router-dom";
@@ -59,6 +59,8 @@ function Login() {
 
   // Check if the user is authenticated, forward to form if they are, and redirect to login if they are not
   useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+
     const fetchAuthStatus = async () => {
       try {
         const authStatus = await checkIsAuthenticated();
@@ -70,18 +72,12 @@ function Login() {
     };
 
     fetchAuthStatus();
-  }, []);
 
-  // Check if the session has expired
-  useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (sessionId) {
+    // Check if the session has expired
+    if (sessionId && !isAuthenticated) {
       setSessionExpired(true);
-      localStorage.removeItem("sessionId");
     }
   }, []);
-
 
   if (isAuthenticated === null) {
     return (
@@ -125,8 +121,10 @@ function Login() {
                 boxShadow: "10px 10px 20px rgba(0, 0, 0, 0.1)",
                 borderRadius: "20px",
                 width: "450px",
+                marginX: "20px",
               }}
             >
+
               <form onSubmit={handleLogin} autoComplete="off">
                 <div
                   style={{
@@ -135,15 +133,22 @@ function Login() {
                     gap: "16px",
                   }}
                 >
-                  <h2 style={{ textAlign: "center" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      margin: "auto",
+                    }}
+                  >
                     <img
                       src={logo}
-                      width="28px"
+                      width="30px"
                       style={{ marginRight: "10px" }}
                       alt="Formulate logo"
                     />
-                    Login
-                  </h2>
+                    <h2 style={{ textAlign: "center" }}>Login</h2>
+                  </div>
+
                   <TextField
                     id="username"
                     label="E-Mail"
@@ -181,8 +186,10 @@ function Login() {
                       }}
                       onClose={() => {
                         setSessionExpired(false);
+                        localStorage.removeItem("sessionId");
                       }}
                     >
+
                       Session expired. Please login again.
                     </Alert>
                   )}
