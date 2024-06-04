@@ -27,8 +27,10 @@ import { serverUri } from "../backendServerConfig";
 
 import AiPromptModal from "./AiPromptModal";
 import LogoutButton from "./LogoutButton";
+import { useNavigate } from "react-router-dom";
 
 function SideMenuFormEditor() {
+  const navigate = useNavigate();
   const currentFormId = useContext(CurrentFormContext);
   const [isAiModalVisible, setIsAiModalVisible] = useState(false);
 
@@ -191,7 +193,7 @@ function SideMenuFormEditor() {
             className="side-menu-item"
             startIcon={<HomeTwoToneIcon />}
             size="large"
-            onClick={() => (window.location.href = "/dashboard")}
+            onClick={() => navigate("/dashboard")}
           >
             <ListItemText
               primary="Dashboard"

@@ -14,8 +14,10 @@ import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import StarTwoToneIcon from "@mui/icons-material/StarTwoTone";
 import Logo from "../assets/logo.svg";
 import LogoutButton from "./LogoutButton";
+import { useNavigate } from "react-router-dom";
 
 const SideMenuDashboard = () => {
+  const navigate = useNavigate();
   const menuWidth = 300;
 
   const DrawerList = (
@@ -27,6 +29,9 @@ const SideMenuDashboard = () => {
             className="side-menu-item"
             startIcon={<AddCircleTwoToneIcon />}
             size="large"
+            onClick={() => {
+              navigate("/dashboard/newform");
+            }}
           >
             <ListItemText
               primary="Create new form"
@@ -40,6 +45,9 @@ const SideMenuDashboard = () => {
             className="side-menu-item"
             startIcon={<ClearAllTwoToneIcon />}
             size="large"
+            onClick={() => {
+              navigate("/dashboard/myforms");
+            }}
           >
             <ListItemText
               primary="My Forms"
