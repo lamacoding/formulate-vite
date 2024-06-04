@@ -6,7 +6,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Login from "./components/routes/Login";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-// eslint-disable-next-line
 import { lightTheme, darkTheme } from "./theme";
 import ProtectedRoutes from "./components/routes/ProtectedRoutes";
 import TopBar from "./components/TopBar";
