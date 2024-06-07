@@ -1,12 +1,9 @@
-import React from "react";
-import { useContext } from "react";
-import { UserContext } from "../../js/UserContext";
+import React from 'react';
 
-export default function MyForms() {
-  const { userId } = useContext(UserContext);
+function MyForms() {
   return (
-    <div>
-      MyForms: <br />
-    </div>
+    <div>My forms</div>
   );
 }
+
+export default MyForms;

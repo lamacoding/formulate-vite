@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Box, CircularProgress, TextField } from "@mui/material";
 import { serverUri } from "../../backendServerConfig";
 import { useNavigate } from "react-router-dom";
@@ -6,18 +6,16 @@ import logo from "../../assets/logo.svg";
 import { LoadingButton } from "@mui/lab";
 import { checkIsAuthenticated } from "../../js/checkAuth";
 import { Navigate } from "react-router-dom";
-import { UserContext } from "../../js/UserContext";
 
 function Login() {
   const navigate = useNavigate();
 
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [wrongLoginWarning, setWrongLoginWarning] = React.useState(false);
-  const [sessionExpired, setSessionExpired] = React.useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [wrongLoginWarning, setWrongLoginWarning] = useState(false);
+  const [sessionExpired, setSessionExpired] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const { userId, setUserId } = useContext(UserContext); // Get the setUserId function from the UserContext
 
   const handleChange = (event) => {
     const { id, value } = event.target;
@@ -49,9 +47,8 @@ function Login() {
       const sessionId = data.sessionId;
 
       localStorage.setItem("sessionId", sessionId);
-      setUserId(data.user.email); // This will update the context with the logged-in user's ID
-      console.log("New user id: " + userId)
-      navigate("/dashboard");
+
+      navigate("/dashboard/myforms");
     } catch (e) {
       console.error("Error logging in", e);
 
@@ -81,7 +78,7 @@ function Login() {
     if (sessionId && !isAuthenticated) {
       setSessionExpired(true);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   if (isAuthenticated === null) {
     return (
