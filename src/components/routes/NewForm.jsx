@@ -37,7 +37,7 @@ export default function NewForm() {
   };
 
   return (
-    <Box width="100%">
+    <Box>
       <h1>New Form</h1>
       <form onSubmit={handleSubmit}>
         <Box
