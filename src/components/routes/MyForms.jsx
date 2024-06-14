@@ -1,6 +1,6 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import { serverUri } from '../../backendServerConfig';
 import { useEffect } from 'react';
 import { useState } from 'react';

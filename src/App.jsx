@@ -7,11 +7,13 @@ import Login from "./components/routes/Login";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {lightTheme, darkTheme} from "./theme";
-import ProtectedRoutes from "./components/routes/ProtectedRoutes";
 import TopBar from "./components/TopBar";
-import DashboardRoute from "./components/routes/DashboardRoute";
-import NewForm from "./components/routes/NewForm";
-import MyForms from "./components/routes/MyForms";
+import Register from "./components/routes/Register";
+
+const ProtectedRoutes = lazy(() => import("./components/routes/ProtectedRoutes"));
+const DashboardRoute = lazy(() => import("./components/routes/DashboardRoute"));
+const NewForm = lazy(() => import("./components/routes/NewForm"));
+const MyForms = lazy(() => import("./components/routes/MyForms"));
 
 const FormRoute = lazy(() => import("./components/routes/FormRoute"));
 
@@ -32,6 +34,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route index element={<Login/>}/>
+            <Route path="/register" element={<Register/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route element={<ProtectedRoutes/>}>
               <Route path="/dashboard" element={<DashboardRoute/>}>
