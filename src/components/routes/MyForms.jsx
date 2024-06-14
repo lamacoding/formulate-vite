@@ -33,9 +33,13 @@ function MyForms() {
           'Content-Type': 'application/json',
         },
       });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+     
+      if (response.status === 404) {
+        console.info('No forms found for this session.');
+        setRows([]);
+        return;
       }
+
       const data = await response.json();
       console.log(data);
 
@@ -58,7 +62,7 @@ function MyForms() {
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 10,
+              pageSize: 5,
             },
           },
         }}

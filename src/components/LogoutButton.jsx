@@ -8,7 +8,6 @@ export default function LogoutButton() {
       method: "POST",
       body: JSON.stringify({
         sessionId: localStorage.getItem("sessionId"),
-        username: "dummyUsername",
       }),
       headers: {
         "Content-Type": "application/json",
@@ -24,6 +23,7 @@ export default function LogoutButton() {
       console.error("Error during logout:", error);
     }
   };
+  
   return (
     <Button
       variant="contained"

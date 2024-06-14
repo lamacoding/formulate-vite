@@ -4,28 +4,40 @@ import { Box, Button, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { serverUri } from "../../backendServerConfig";
 
 function Register() {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+  });
+  const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if(confirmPasswordError) {
-      console.log("password error");
+    
+    if(formData.password !== confirmPassword) {
+      setConfirmPasswordError(true);
       return;
     }
     console.log("Register");
+    const response = await fetch(`${serverUri}/api/user/register`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    const data = await response.json();
+    console.log(data);
   };
 
-  const handleChange = (event) => {
-    const { id, value } = event.target;
-
-    if (id === "username") {
-      //setUsername(value);
-    } else if (id === "password") {
-      //setPassword(value);
-    }
+  const handleChange = (event, changeItem) => {
+    setFormData({...formData, [changeItem]: event.target.value});
   };
 
   return (
@@ -85,7 +97,7 @@ function Register() {
                 label="First name"
                 variant="outlined"
                 type="text"
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, "firstname")}
                 required
               />
               <TextField
@@ -93,7 +105,7 @@ function Register() {
                 label="Last name"
                 variant="outlined"
                 type="text"
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, "lastname")}
                 required
               />
               <TextField
@@ -101,7 +113,7 @@ function Register() {
                 label="E-Mail"
                 variant="outlined"
                 type="email"
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, "email")}
                 required
               />
               <TextField
@@ -109,7 +121,7 @@ function Register() {
                 label="Password"
                 variant="outlined"
                 type="password"
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, "password")}
                 required
               />
               <TextField
@@ -117,7 +129,7 @@ function Register() {
                 label="Confirm password"
                 variant="outlined"
                 type="password"
-                onChange={handleChange}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
               <LoadingButton
