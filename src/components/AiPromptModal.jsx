@@ -2,10 +2,9 @@ import * as React from "react";
 import { Box, Button, Modal, TextField } from "@mui/material";
 import { aiServerUri } from "../backendServerConfig";
 import { useState } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
 import { LoadingButton } from "@mui/lab";
 
-function AiPromptModal({ isOpen, onClose }) {
+function AiPromptModal({ isOpen = false, onClose }) {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(e) {

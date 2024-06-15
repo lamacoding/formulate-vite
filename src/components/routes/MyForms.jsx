@@ -6,19 +6,21 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const columns = [
-  { field: 'id', headerName: '#', width: 90 },
-  {
-    field: 'formName',
-    headerName: 'Form name',
-    width: 500,
-    editable: false,
-  },
-];
-
 function MyForms() {
   const sessionId = localStorage.getItem('sessionId');
   const navigate = useNavigate();
+
+  const columns = [
+    { field: "id" },
+    { field: "index", headerName: "#", width: 150, editable: false },
+    {
+      field: "formName",
+      headerName: "Form name",
+      width: 500,
+      editable: false,
+    },
+  ];
+
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
@@ -45,7 +47,7 @@ function MyForms() {
 
       let newRows = [];
       data.map((item, index) => {
-        newRows.push({ id: index + 1, formName: item.formName });
+        newRows.push({ id: item.id, index: index + 1, formName: item.formName });
       });
       setRows(newRows);
     } catch (error) {
@@ -62,15 +64,17 @@ function MyForms() {
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 5,
+              pageSize: 8,
             },
           },
         }}
-        pageSizeOptions={[5]}
+        pageSizeOptions={[8, 21 , 37]}
+        columnVisibilityModel={{
+          id: false,
+        }}
         // disableRowSelectionOnClick
         onRowClick={(params) => {
-          console.log(params);
-          navigate(`/form?id=${params.row.id}`);
+          navigate(`/form/${params.row.id}`);
         }}
         sx={{ cursor: 'pointer' }}
       />

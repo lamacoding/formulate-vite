@@ -12,10 +12,9 @@ import Register from "./components/routes/Register";
 
 const ProtectedRoutes = lazy(() => import("./components/routes/ProtectedRoutes"));
 const DashboardRoute = lazy(() => import("./components/routes/DashboardRoute"));
+const FormRoute = lazy(() => import("./components/routes/FormRoute"));
 const NewForm = lazy(() => import("./components/routes/NewForm"));
 const MyForms = lazy(() => import("./components/routes/MyForms"));
-
-const FormRoute = lazy(() => import("./components/routes/FormRoute"));
 
 function App() {
   const [theme, setTheme] = useState(
@@ -41,7 +40,7 @@ function App() {
                 <Route path="newform" element={<NewForm/>}/>
                 <Route index path="*" element={<MyForms/>}/>
               </Route>
-              <Route path="/form" element={<FormRoute/>}/>
+              <Route path="/form/:id" element={<FormRoute/>}/>
             </Route>
           </Routes>
         </BrowserRouter>

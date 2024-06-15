@@ -8,7 +8,10 @@ import {
   ListItemText,
 } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
-import { CurrentFormContext } from "./routes/FormRoute";
+import {
+  CurrentFormContext,
+  CurrentFormSchemaContext,
+} from "./routes/FormRoute";
 import Logo from "../assets/logo.svg";
 
 import TextFieldsTwoToneIcon from "@mui/icons-material/TextFieldsTwoTone";
@@ -32,6 +35,7 @@ import { useNavigate } from "react-router-dom";
 function SideMenuFormEditor() {
   const navigate = useNavigate();
   const currentFormId = useContext(CurrentFormContext);
+  const { schema, setSchema } = useContext(CurrentFormSchemaContext);
   const [isAiModalVisible, setIsAiModalVisible] = useState(false);
 
   const openAiModal = () => {
@@ -43,144 +47,127 @@ function SideMenuFormEditor() {
   };
 
   const addFormInput = (component) => {
-    fetch(`${serverUri}/api/form/id/${currentFormId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        let newComponent = null;
+    let newComponent = null;
 
-        switch (component) {
-          case "label":
-            newComponent = {
-              label: "Enter label text",
-              name: "label" + data.fields.length,
-              type: "label",
-            };
-            break;
+    switch (component) {
+      case "label":
+        newComponent = {
+          label: "Enter label text",
+          name: "label" + schema.fields.length,
+          type: "label",
+        };
+        break;
 
-          case "single-line-text":
-            newComponent = {
-              label: "Enter label text",
-              name: "single-line-text" + data.fields.length,
-              type: "single-line-text",
-              validation: {
-                message: "Invalid input",
-                pattern: ".*",
-                isRequired: false,
-              },
-            };
-            break;
-
-          case "multi-line-text":
-            newComponent = {
-              label: "Enter label text",
-              name: "multi-line-text" + data.fields.length,
-              type: "multi-line-text",
-              validation: {
-                message: "Invalid input",
-                pattern: ".*",
-                isRequired: false,
-              },
-            };
-            break;
-
-          case "checkbox":
-            newComponent = {
-              label: "Enter label text",
-              name: "checkbox" + data.fields.length,
-              type: "checkbox",
-              options: ["Option 1", "Option 2", "Option 3"],
-              validation: {
-                message: "Invalid input",
-                isRequired: false,
-              },
-            };
-            break;
-
-          case "radio":
-            newComponent = {
-              label: "Enter label text",
-              name: "radio" + data.fields.length,
-              type: "radio",
-              options: ["Option 1", "Option 2", "Option 3"],
-              validation: {
-                message: "Invalid input",
-                isRequired: false,
-              },
-            };
-            break;
-
-          case "date":
-            newComponent = {
-              label: "Enter label text",
-              name: "date" + data.fields.length,
-              type: "date",
-              validation: {
-                message: "Invalid input",
-                isRequired: false,
-              },
-            };
-            break;
-
-          case "dropdown":
-            newComponent = {
-              label: "Enter label text",
-              name: "dropdown" + data.fields.length,
-              type: "dropdown",
-              options: ["Option 1", "Option 2", "Option 3"],
-              validation: {
-                message: "Invalid input",
-                isRequired: false,
-              },
-            };
-            break;
-
-          case "multi-select-dropdown":
-            newComponent = {
-              label: "Enter label text",
-              name: "multi-select-dropdown" + data.fields.length,
-              type: "multi-select-dropdown",
-              options: ["Option 1", "Option 2", "Option 3"],
-              validation: {
-                message: "Invalid input",
-                isRequired: false,
-              },
-            };
-            break;
-
-          case "file-upload":
-            newComponent = {
-              label: "Enter label text",
-              name: "file-upload" + data.fields.length,
-              type: "file-upload",
-              validation: {
-                message: "Invalid input",
-                "file-types": ["*"],
-                isRequired: false,
-              },
-            };
-            break;
-
-          default:
-            throw new Error("Invalid input type");
-        }
-
-        data.fields.push(newComponent);
-
-        fetch(`${serverUri}/api/form/update/${currentFormId}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
+      case "single-line-text":
+        newComponent = {
+          label: "Enter label text",
+          name: "single-line-text" + schema.fields.length,
+          type: "single-line-text",
+          validation: {
+            message: "Invalid input",
+            pattern: ".*",
+            isRequired: false,
           },
-          body: JSON.stringify(data),
-        })
-          .then((response) => response.json())
-          .then((updatedData) => {
-            console.log(updatedData);
-          })
-          .catch((error) => console.error("Error updating form:", error));
-      })
-      .catch((error) => console.error("Error loading JSON file:", error));
+        };
+        break;
+
+      case "multi-line-text":
+        newComponent = {
+          label: "Enter label text",
+          name: "multi-line-text" + schema.fields.length,
+          type: "multi-line-text",
+          validation: {
+            message: "Invalid input",
+            pattern: ".*",
+            isRequired: false,
+          },
+        };
+        break;
+
+      case "checkbox":
+        newComponent = {
+          label: "Enter label text",
+          name: "checkbox" + schema.fields.length,
+          type: "checkbox",
+          options: ["Option 1", "Option 2", "Option 3"],
+          validation: {
+            message: "Invalid input",
+            isRequired: false,
+          },
+        };
+        break;
+
+      case "radio":
+        newComponent = {
+          label: "Enter label text",
+          name: "radio" + schema.fields.length,
+          type: "radio",
+          options: ["Option 1", "Option 2", "Option 3"],
+          validation: {
+            message: "Invalid input",
+            isRequired: false,
+          },
+        };
+        break;
+
+      case "date":
+        newComponent = {
+          label: "Enter label text",
+          name: "date" + schema.fields.length,
+          type: "date",
+          validation: {
+            message: "Invalid input",
+            isRequired: false,
+          },
+        };
+        break;
+
+      case "dropdown":
+        newComponent = {
+          label: "Enter label text",
+          name: "dropdown" + schema.fields.length,
+          type: "dropdown",
+          options: ["Option 1", "Option 2", "Option 3"],
+          validation: {
+            message: "Invalid input",
+            isRequired: false,
+          },
+        };
+        break;
+
+      case "multi-select-dropdown":
+        newComponent = {
+          label: "Enter label text",
+          name: "multi-select-dropdown" + schema.fields.length,
+          type: "multi-select-dropdown",
+          options: ["Option 1", "Option 2", "Option 3"],
+          validation: {
+            message: "Invalid input",
+            isRequired: false,
+          },
+        };
+        break;
+
+      case "file-upload":
+        newComponent = {
+          label: "Enter label text",
+          name: "file-upload" + schema.fields.length,
+          type: "file-upload",
+          validation: {
+            message: "Invalid input",
+            "file-types": ["*"],
+            isRequired: false,
+          },
+        };
+        break;
+
+      default:
+        throw new Error("Invalid input type");
+    }
+    let newSchema = schema;
+    newSchema.fields.push(newComponent);
+    setSchema(newSchema);
+    console.log(newSchema);
   };
 
   const menuWidth = 300;
