@@ -164,10 +164,10 @@ function SideMenuFormEditor() {
       default:
         throw new Error("Invalid input type");
     }
-    let newSchema = schema;
-    newSchema.fields.push(newComponent);
-    setSchema(newSchema);
-    console.log(newSchema);
+    setSchema(prevSchema => ({
+      ...prevSchema,
+      fields: [...prevSchema.fields, newComponent]
+  }));
   };
 
   const menuWidth = 300;

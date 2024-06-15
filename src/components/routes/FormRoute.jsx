@@ -11,7 +11,10 @@ import { serverUri } from "../../backendServerConfig";
 export const CurrentFormContext = createContext(null);
 
 //Context that holds the current form schema
-export const CurrentFormSchemaContext = createContext({});
+export const CurrentFormSchemaContext = React.createContext({
+  schema: { fields: [] }, // Default value with an empty fields array
+  setSchema: () => {}
+});
 
 function FormRoute() {
   const { id } = useParams();
@@ -27,7 +30,7 @@ function FormRoute() {
 
   return (
     <CurrentFormContext.Provider value={id}>
-      <CurrentFormSchemaContext.Provider value={schema}>
+      <CurrentFormSchemaContext.Provider value={{ schema, setSchema }}>
         <Box sx={{ display: "flex" }}>
           <AppBar
             position="fixed"

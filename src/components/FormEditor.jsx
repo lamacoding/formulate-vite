@@ -13,7 +13,11 @@ import { Box, Button } from "@mui/material";
 
 function FormEditor() {
   const currentFormId = useContext(CurrentFormContext);
-  const schema = useContext(CurrentFormSchemaContext);
+  const { schema, setSchema } = useContext(CurrentFormSchemaContext);
+
+  useEffect(() => {
+    console.log("Schema has changed.");
+  }, [schema]);
 
   if (!schema) {
     return (
@@ -29,10 +33,6 @@ function FormEditor() {
       </div>
     );
   }
-
-  useEffect(() => {
-    console.log("Schema has changed.");
-  }, [schema]);
 
   const handleSave = () => {
     console.log("save");
