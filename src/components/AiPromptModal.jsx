@@ -54,7 +54,7 @@ function AiPromptModal({ isOpen = false, onClose }) {
         <form onSubmit={handleSubmit} autoComplete="off">
           <TextField
             fullWidth={true}
-            label="What do you want to generate?"
+            label="What do you want to generate? (Current form will be overwritten)"
             id="aiPrompt"
             multiline
             rows={5}

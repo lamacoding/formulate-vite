@@ -46,7 +46,7 @@ function FormInput({ field, id }) {
 
     switch (field.type) {
       case "label":
-        return <p>{field.label}</p>;
+        return <p style={{ width: "100%" }}>{field.label}</p>;
 
       case "single-line-text":
         return (

@@ -26,8 +26,6 @@ import FileUploadTwoToneIcon from "@mui/icons-material/FileUploadTwoTone";
 import AutoAwesomeTwoToneIcon from "@mui/icons-material/AutoAwesomeTwoTone";
 import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
 
-import { serverUri } from "../backendServerConfig";
-
 import AiPromptModal from "./AiPromptModal";
 import LogoutButton from "./LogoutButton";
 import { useNavigate } from "react-router-dom";
@@ -53,7 +51,7 @@ function SideMenuFormEditor() {
       case "label":
         newComponent = {
           label: "Enter label text",
-          name: "label" + schema.fields.length,
+          name: "label" + (schema.fields ? schema.fields.length : 0),
           type: "label",
         };
         break;
@@ -61,7 +59,7 @@ function SideMenuFormEditor() {
       case "single-line-text":
         newComponent = {
           label: "Enter label text",
-          name: "single-line-text" + schema.fields.length,
+          name: "single-line-text" + (schema.fields ? schema.fields.length : 0),
           type: "single-line-text",
           validation: {
             message: "Invalid input",
@@ -74,7 +72,7 @@ function SideMenuFormEditor() {
       case "multi-line-text":
         newComponent = {
           label: "Enter label text",
-          name: "multi-line-text" + schema.fields.length,
+          name: "multi-line-text" + (schema.fields ? schema.fields.length : 0),
           type: "multi-line-text",
           validation: {
             message: "Invalid input",
@@ -87,7 +85,7 @@ function SideMenuFormEditor() {
       case "checkbox":
         newComponent = {
           label: "Enter label text",
-          name: "checkbox" + schema.fields.length,
+          name: "checkbox" + (schema.fields ? schema.fields.length : 0),
           type: "checkbox",
           options: ["Option 1", "Option 2", "Option 3"],
           validation: {
@@ -100,7 +98,7 @@ function SideMenuFormEditor() {
       case "radio":
         newComponent = {
           label: "Enter label text",
-          name: "radio" + schema.fields.length,
+          name: "radio" + (schema.fields ? schema.fields.length : 0),
           type: "radio",
           options: ["Option 1", "Option 2", "Option 3"],
           validation: {
@@ -113,7 +111,7 @@ function SideMenuFormEditor() {
       case "date":
         newComponent = {
           label: "Enter label text",
-          name: "date" + schema.fields.length,
+          name: "date" + (schema.fields ? schema.fields.length : 0),
           type: "date",
           validation: {
             message: "Invalid input",
@@ -125,7 +123,7 @@ function SideMenuFormEditor() {
       case "dropdown":
         newComponent = {
           label: "Enter label text",
-          name: "dropdown" + schema.fields.length,
+          name: "dropdown" + (schema.fields ? schema.fields.length : 0),
           type: "dropdown",
           options: ["Option 1", "Option 2", "Option 3"],
           validation: {
@@ -138,7 +136,7 @@ function SideMenuFormEditor() {
       case "multi-select-dropdown":
         newComponent = {
           label: "Enter label text",
-          name: "multi-select-dropdown" + schema.fields.length,
+          name: "multi-select-dropdown" + (schema.fields ? schema.fields.length : 0),
           type: "multi-select-dropdown",
           options: ["Option 1", "Option 2", "Option 3"],
           validation: {
@@ -151,7 +149,7 @@ function SideMenuFormEditor() {
       case "file-upload":
         newComponent = {
           label: "Enter label text",
-          name: "file-upload" + schema.fields.length,
+          name: "file-upload" + (schema.fields ? schema.fields.length : 0),
           type: "file-upload",
           validation: {
             message: "Invalid input",
@@ -166,7 +164,7 @@ function SideMenuFormEditor() {
     }
     setSchema(prevSchema => ({
       ...prevSchema,
-      fields: [...prevSchema.fields, newComponent]
+      fields: [...(prevSchema.fields || []), newComponent]
   }));
   };
 

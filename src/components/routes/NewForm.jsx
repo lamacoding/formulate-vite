@@ -2,8 +2,13 @@ import { Box, Button, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import React from "react";
 import { serverUri } from "../../backendServerConfig";
+import { useNavigate } from "react-router-dom";
+import { LoadingButton } from "@mui/lab";
+import { useState } from "react";
 
-export default function NewForm() {
+function NewForm() {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const createForm = async (formData) => {
     try {
       const response = await fetch(`${serverUri}/api/form/create`, {
@@ -20,7 +25,6 @@ export default function NewForm() {
 
       const result = await response.json();
       console.log("Form created successfully:", result);
-      // Optionally, handle further actions like redirecting the user
     } catch (error) {
       console.error("Error creating form:", error);
     }
@@ -30,10 +34,14 @@ export default function NewForm() {
     e.preventDefault();
     const formData = {
       formName: document.getElementById("form-name").value,
+      sessionId: localStorage.getItem("sessionId"),
       // description: document.getElementById('form-description').value,
       // expiryDate: document.getElementById('expiry-date').value,
     };
+    setIsLoading(true);
     createForm(formData);
+    setIsLoading(false);
+    navigate("/dashboard");
   };
 
   return (
@@ -82,12 +90,14 @@ export default function NewForm() {
             disabled
           />
           <Box sx={{ display: "flex", alignItems: "center", width: "50%" }}>
-            <Button type="submit" variant="contained">
+            <LoadingButton type="submit" variant="contained" loading={isLoading}>
               Create form
-            </Button>
+            </LoadingButton>
           </Box>
         </Box>
       </form>
     </Box>
   );
 }
+
+export default NewForm;

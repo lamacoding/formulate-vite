@@ -9,11 +9,20 @@ import {
 } from "./routes/FormRoute";
 import { serverUri } from "../backendServerConfig";
 import AiPromptModal from "./AiPromptModal";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 function FormEditor() {
   const currentFormId = useContext(CurrentFormContext);
   const { schema, setSchema } = useContext(CurrentFormSchemaContext);
+  const [isAiModalVisible, setIsAiModalVisible] = useState(false);
+
+  const openAiModal = () => {
+    setIsAiModalVisible(true);
+  };
+
+  const closeAiModal = () => {
+    setIsAiModalVisible(false);
+  };
 
   useEffect(() => {
     console.log("Schema has changed.");
@@ -70,24 +79,44 @@ function FormEditor() {
       >
         <h1>{schema["formName"]}</h1>
         <form style={{ width: "100%" }}>
-          {schema["fields"].map((field, i) => (
-            <div
-              style={{
-                marginBottom: "15px",
-                display: "flex",
-                alignItems: "center",
-              }}
-              key={i}
-            >
-              <FormInput field={field} id={field.name} />
-            </div>
-          ))}
+          {schema.fields &&
+            schema.fields.map((field, i) => (
+              <div
+                style={{
+                  marginBottom: "15px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+                key={i}
+              >
+                <FormInput field={field} id={field.name} />
+              </div>
+            ))}
         </form>
         <AiPromptModal />
-        <Button variant="contained" onClick={handleSave}>
-          Save current form
-        </Button>
+        {schema.fields && schema.fields.length > 0 ? (
+          <Button variant="contained" onClick={handleSave}>
+            Save current form
+          </Button>
+        ) : (
+          <>
+            <Typography
+              variant="body1"
+              sx={{ marginTop: "20px", color: "gray" }}
+            >
+              Start adding form elements by clicking on the items in the left
+              menu.
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ marginTop: "20px", color: "gray" }}
+            >
+              Or start using the <Button onClick={openAiModal} variant="outlined" sx={{ marginX: "5px" }}>AI assistant</Button> to generate a form for you.
+            </Typography>
+          </>
+        )}
       </Box>
+      <AiPromptModal isOpen={isAiModalVisible} onClose={closeAiModal} />
     </>
   );
 }
