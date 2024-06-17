@@ -2,6 +2,7 @@ import React, {Suspense, useEffect, useState} from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
 import {Navigate, Outlet} from "react-router-dom";
 import {checkIsAuthenticated} from "../../js/checkAuth";
+import {Box} from "@mui/material";
 
 function ProtectedRoutes() {
   const [isAuthenticated, setIsAuthenticated] = useState(null); // null indicates loading state
@@ -21,7 +22,11 @@ function ProtectedRoutes() {
   }, [isAuthenticated]);
 
   if (isAuthenticated === null) {
-    return <CircularProgress />; // Show loading indicator while checking auth status
+    return (
+      <Box sx={{ display: "flex", width: "100vw", height: "100vh", justifyContent: "center", alignItems: "center" }}>
+        <CircularProgress />
+      </Box>
+    ); // Show loading indicator while checking auth status
   }
 
   if (!isAuthenticated) {
