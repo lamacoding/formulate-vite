@@ -1,5 +1,7 @@
 import React from "react";
 import {
+  Box,
+  Button,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -13,16 +15,29 @@ import {
   Paper,
   Radio,
   RadioGroup,
-  Select,
+  Select, styled,
   TextField,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
+import {DatePicker} from "@mui/x-date-pickers";
 import MoreVertTwoToneIcon from "@mui/icons-material/MoreVertTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import { useState } from "react";
+import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
+import {useState} from "react";
 
-function FormInput({ field, id }) {
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
+function FormInput({field, id}) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -46,7 +61,7 @@ function FormInput({ field, id }) {
 
     switch (field.type) {
       case "label":
-        return <p style={{ width: "100%" }}>{field.label}</p>;
+        return <p style={{width: "100%"}}>{field.label}</p>;
 
       case "single-line-text":
         return (
@@ -82,10 +97,10 @@ function FormInput({ field, id }) {
 
       case "checkbox":
         return (
-          <FormGroup sx={{ width: "100%" }}>
+          <FormGroup sx={{width: "100%"}}>
             {field.options.map((option) => (
               <FormControlLabel
-                control={<Checkbox />}
+                control={<Checkbox/>}
                 label={option}
                 key={option}
               />
@@ -101,7 +116,7 @@ function FormInput({ field, id }) {
               {field.options.map((option) => (
                 <FormControlLabel
                   value={option}
-                  control={<Radio />}
+                  control={<Radio/>}
                   label={option}
                   key={option}
                 ></FormControlLabel>
@@ -115,17 +130,17 @@ function FormInput({ field, id }) {
           <DatePicker
             format="DD.MM.YYYY"
             label={field.label + (isRequired && " *")}
-            sx={{ width: "100%" }}
+            sx={{width: "100%"}}
           />
         );
 
       case "dropdown":
         return (
           <FormControl fullWidth={true}>
-            <InputLabel id="demo-simple-select-label">{field.label}</InputLabel>
+            <InputLabel id={"label-" + field.name}>{field.label}</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
+              labelId={"label-" + field.name}
+              id={field.name}
               label={field.label}
             >
               {field.options.map((option, index) => (
@@ -137,11 +152,42 @@ function FormInput({ field, id }) {
           </FormControl>
         );
 
-      case "multi-select-dropdown":
-        return null;
+      // case "multi-select-dropdown":
+      //   return (
+      //     <FormControl fullWidth={true}>
+      //       <InputLabel id={"label-" + field.name}>{field.label}</InputLabel>
+      //       <Select
+      //         labelId={"label-" + field.name}
+      //         id={field.name}
+      //         label={field.label}
+      //         value={field.options.map((option) => ())}
+      //         multiple
+      //         renderValue={(option) => (option.join(", "))}
+      //       >
+      //         {field.options.map((option, index) => (
+      //           <MenuItem value={option} key={index}>
+      //             {option}
+      //           </MenuItem>
+      //         ))}
+      //       </Select>
+      //     </FormControl>
+      //   );
 
       case "file-upload":
-        return null;
+        return (
+          <Box sx={{width: "100%"}}>
+            <Button
+              component="label"
+              role={undefined}
+              variant="contained"
+              tabIndex={-1}
+              startIcon={<CloudUploadTwoToneIcon/>}
+            >
+              Upload file
+              <VisuallyHiddenInput type="file"/>
+            </Button>
+          </Box>
+        );
 
       default:
         return null;
@@ -157,9 +203,9 @@ function FormInput({ field, id }) {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
-        sx={{ marginLeft: 2 }}
+        sx={{marginLeft: 2}}
       >
-        <MoreVertTwoToneIcon />
+        <MoreVertTwoToneIcon/>
       </IconButton>
       <Menu
         id={`more-menu-${id}`}
@@ -169,17 +215,17 @@ function FormInput({ field, id }) {
         MenuListProps={{
           "aria-labelledby": `more-button-${id}`,
         }}
-        sx={{ width: 320, maxWidth: "100%" }}
+        sx={{width: 320, maxWidth: "100%"}}
       >
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
-            <EditTwoToneIcon />
+            <EditTwoToneIcon/>
           </ListItemIcon>
           Edit
         </MenuItem>
-        <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
-          <ListItemIcon sx={{ color: "error.main" }}>
-            <DeleteTwoToneIcon />
+        <MenuItem onClick={handleDelete} sx={{color: "error.main"}}>
+          <ListItemIcon sx={{color: "error.main"}}>
+            <DeleteTwoToneIcon/>
           </ListItemIcon>
           Delete
         </MenuItem>

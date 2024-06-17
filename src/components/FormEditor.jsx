@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 // import old_schema from '../forms.json';
 // import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import CircularProgress from "@mui/material/CircularProgress";
@@ -7,13 +7,13 @@ import {
   CurrentFormContext,
   CurrentFormSchemaContext,
 } from "./routes/FormRoute";
-import { serverUri } from "../backendServerConfig";
+import {serverUri} from "../backendServerConfig";
 import AiPromptModal from "./AiPromptModal";
-import { Box, Button, Typography } from "@mui/material";
+import {Box, Button, Divider, Typography} from "@mui/material";
 
 function FormEditor() {
   const currentFormId = useContext(CurrentFormContext);
-  const { schema, setSchema } = useContext(CurrentFormSchemaContext);
+  const {schema, setSchema} = useContext(CurrentFormSchemaContext);
   const [isAiModalVisible, setIsAiModalVisible] = useState(false);
 
   const openAiModal = () => {
@@ -38,7 +38,7 @@ function FormEditor() {
           height: "100vh",
         }}
       >
-        <CircularProgress />
+        <CircularProgress/>
       </div>
     );
   }
@@ -78,7 +78,7 @@ function FormEditor() {
         }}
       >
         <h1>{schema["formName"]}</h1>
-        <form style={{ width: "100%" }}>
+        <form style={{width: "100%"}}>
           {schema.fields &&
             schema.fields.map((field, i) => (
               <div
@@ -89,11 +89,16 @@ function FormEditor() {
                 }}
                 key={i}
               >
-                <FormInput field={field} id={field.name} />
+                <FormInput field={field} id={field.name}/>
               </div>
             ))}
         </form>
-        <AiPromptModal />
+        {
+          schema.fields && schema.fields.length > 0 && (
+            <Divider sx={{width: "100%", marginY: 4, color: "#BABABA"}}>End of form</Divider>
+          )
+        }
+        <AiPromptModal/>
         {schema.fields && schema.fields.length > 0 ? (
           <Button variant="contained" onClick={handleSave}>
             Save current form
@@ -102,21 +107,22 @@ function FormEditor() {
           <>
             <Typography
               variant="body1"
-              sx={{ marginTop: "20px", color: "gray" }}
+              sx={{marginTop: "20px", color: "gray"}}
             >
               Start adding form elements by clicking on the items in the left
               menu.
             </Typography>
             <Typography
               variant="body1"
-              sx={{ marginTop: "20px", color: "gray" }}
+              sx={{marginTop: "20px", color: "gray"}}
             >
-              Or start using the <Button onClick={openAiModal} variant="outlined" sx={{ marginX: "5px" }}>AI assistant</Button> to generate a form for you.
+              Or start using the <Button onClick={openAiModal} variant="outlined" sx={{marginX: "5px"}}>AI
+              assistant</Button> to generate a form for you.
             </Typography>
           </>
         )}
       </Box>
-      <AiPromptModal isOpen={isAiModalVisible} onClose={closeAiModal} />
+      <AiPromptModal isOpen={isAiModalVisible} onClose={closeAiModal}/>
     </>
   );
 }

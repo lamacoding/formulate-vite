@@ -21,7 +21,7 @@ import CheckBoxTwoToneIcon from "@mui/icons-material/CheckBoxTwoTone";
 import RadioButtonCheckedTwoToneIcon from "@mui/icons-material/RadioButtonCheckedTwoTone";
 import DateRangeTwoToneIcon from "@mui/icons-material/DateRangeTwoTone";
 import ArrowDropDownTwoToneIcon from "@mui/icons-material/ArrowDropDownTwoTone";
-import ArrowDropDownCircleTwoToneIcon from "@mui/icons-material/ArrowDropDownCircleTwoTone";
+// import ArrowDropDownCircleTwoToneIcon from "@mui/icons-material/ArrowDropDownCircleTwoTone";
 import FileUploadTwoToneIcon from "@mui/icons-material/FileUploadTwoTone";
 import AutoAwesomeTwoToneIcon from "@mui/icons-material/AutoAwesomeTwoTone";
 import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
@@ -32,7 +32,7 @@ import { useNavigate } from "react-router-dom";
 
 function SideMenuFormEditor() {
   const navigate = useNavigate();
-  const currentFormId = useContext(CurrentFormContext);
+  // const currentFormId = useContext(CurrentFormContext);
   const { schema, setSchema } = useContext(CurrentFormSchemaContext);
   const [isAiModalVisible, setIsAiModalVisible] = useState(false);
 
@@ -294,20 +294,20 @@ function SideMenuFormEditor() {
           </Button>
         </ListItem>
 
-        <ListItem>
-          <Button
-            className="side-menu-item add-form-input"
-            startIcon={<ArrowDropDownCircleTwoToneIcon />}
-            size="large"
-            onClick={() => addFormInput("multi-select-dropdown")}
-          >
-            <ListItemText
-              primary="Multi-Select Dropdown"
-              sx={{ paddingLeft: "10px", color: "text.secondary" }}
-              disableTypography
-            />
-          </Button>
-        </ListItem>
+        {/*<ListItem>*/}
+        {/*  <Button*/}
+        {/*    className="side-menu-item add-form-input"*/}
+        {/*    startIcon={<ArrowDropDownCircleTwoToneIcon />}*/}
+        {/*    size="large"*/}
+        {/*    onClick={() => addFormInput("multi-select-dropdown")}*/}
+        {/*  >*/}
+        {/*    <ListItemText*/}
+        {/*      primary="Multi-Select Dropdown"*/}
+        {/*      sx={{ paddingLeft: "10px", color: "text.secondary" }}*/}
+        {/*      disableTypography*/}
+        {/*    />*/}
+        {/*  </Button>*/}
+        {/*</ListItem>*/}
 
         <ListItem>
           <Button

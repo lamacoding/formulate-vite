@@ -1,10 +1,12 @@
 import * as React from "react";
 import { Box, Button, Modal, TextField } from "@mui/material";
 import { aiServerUri } from "../backendServerConfig";
-import { useState } from "react";
+import {useContext, useState} from "react";
 import { LoadingButton } from "@mui/lab";
+import {CurrentFormSchemaContext} from "./routes/FormRoute.jsx";
 
 function AiPromptModal({ isOpen = false, onClose }) {
+  const {schema, setSchema} = useContext(CurrentFormSchemaContext);
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(e) {
@@ -26,6 +28,10 @@ function AiPromptModal({ isOpen = false, onClose }) {
 
       const data = await response.json();
       console.log(data);
+
+      if (Object.keys(data).length !== 0) {
+        setSchema(data);
+      }
     } catch (error) {
       console.error("Error:", error);
     } finally {
