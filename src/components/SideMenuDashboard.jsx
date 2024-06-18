@@ -29,7 +29,7 @@ const SideMenuDashboard = () => {
             className="side-menu-item"
             startIcon={<AddCircleTwoToneIcon />}
             size="large"
-            onClick={() => {
+            onMouseDown={() => {
               navigate("/dashboard/newform");
             }}
           >
@@ -45,7 +45,7 @@ const SideMenuDashboard = () => {
             className="side-menu-item"
             startIcon={<ClearAllTwoToneIcon />}
             size="large"
-            onClick={() => {
+            onMouseDown={() => {
               navigate("/dashboard/myforms");
             }}
           >

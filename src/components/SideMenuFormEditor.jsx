@@ -178,7 +178,7 @@ function SideMenuFormEditor() {
             className="side-menu-item"
             startIcon={<HomeTwoToneIcon />}
             size="large"
-            onClick={() => navigate("/dashboard")}
+            onMouseDown={() => navigate("/dashboard")}
           >
             <ListItemText
               primary="Dashboard"
@@ -195,7 +195,7 @@ function SideMenuFormEditor() {
             className="side-menu-item add-form-input"
             startIcon={<TextFieldsTwoToneIcon />}
             size="large"
-            onClick={() => addFormInput("label")}
+            onMouseDown={() => addFormInput("label")}
           >
             <ListItemText
               primary="Label"
@@ -210,7 +210,7 @@ function SideMenuFormEditor() {
             className="side-menu-item add-form-input"
             startIcon={<Crop169TwoToneIcon />}
             size="large"
-            onClick={() => addFormInput("single-line-text")}
+            onMouseDown={() => addFormInput("single-line-text")}
           >
             <ListItemText
               primary="Single line input"
@@ -225,7 +225,7 @@ function SideMenuFormEditor() {
             className="side-menu-item add-form-input"
             startIcon={<Crop75TwoToneIcon />}
             size="large"
-            onClick={() => addFormInput("multi-line-text")}
+            onMouseDown={() => addFormInput("multi-line-text")}
           >
             <ListItemText
               primary="Multi line input"
@@ -239,7 +239,7 @@ function SideMenuFormEditor() {
             className="side-menu-item add-form-input"
             startIcon={<CheckBoxTwoToneIcon />}
             size="large"
-            onClick={() => addFormInput("checkbox")}
+            onMouseDown={() => addFormInput("checkbox")}
           >
             <ListItemText
               primary="Checkbox"
@@ -254,7 +254,7 @@ function SideMenuFormEditor() {
             className="side-menu-item add-form-input"
             startIcon={<RadioButtonCheckedTwoToneIcon />}
             size="large"
-            onClick={() => addFormInput("radio")}
+            onMouseDown={() => addFormInput("radio")}
           >
             <ListItemText
               primary="Radio"
@@ -269,7 +269,7 @@ function SideMenuFormEditor() {
             className="side-menu-item add-form-input"
             startIcon={<DateRangeTwoToneIcon />}
             size="large"
-            onClick={() => addFormInput("date")}
+            onMouseDown={() => addFormInput("date")}
           >
             <ListItemText
               primary="Date"
@@ -284,7 +284,7 @@ function SideMenuFormEditor() {
             className="side-menu-item add-form-input"
             startIcon={<ArrowDropDownTwoToneIcon />}
             size="large"
-            onClick={() => addFormInput("dropdown")}
+            onMouseDown={() => addFormInput("dropdown")}
           >
             <ListItemText
               primary="Dropdown"
@@ -314,7 +314,7 @@ function SideMenuFormEditor() {
             className="side-menu-item add-form-input"
             startIcon={<FileUploadTwoToneIcon />}
             size="large"
-            onClick={() => addFormInput("file-upload")}
+            onMouseDown={() => addFormInput("file-upload")}
           >
             <ListItemText
               primary="File-Upload"
@@ -331,7 +331,7 @@ function SideMenuFormEditor() {
             className="side-menu-item"
             startIcon={<AutoAwesomeTwoToneIcon />}
             size="large"
-            onClick={() => openAiModal()}
+            onMouseDown={() => openAiModal()}
           >
             <ListItemText
               primary="AI Assistant"

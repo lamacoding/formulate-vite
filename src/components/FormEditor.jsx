@@ -1,20 +1,32 @@
-import React, {useContext, useEffect, useState} from "react";
-// import old_schema from '../forms.json';
-// import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import React, { useContext, useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import FormInput from "./FormInput";
 import {
   CurrentFormContext,
   CurrentFormSchemaContext,
 } from "./routes/FormRoute";
-import {serverUri} from "../backendServerConfig";
+import { serverUri } from "../backendServerConfig";
 import AiPromptModal from "./AiPromptModal";
-import {Box, Button, Divider, Typography} from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  Snackbar,
+  Typography,
+  Alert,
+} from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
 function FormEditor() {
   const currentFormId = useContext(CurrentFormContext);
-  const {schema, setSchema} = useContext(CurrentFormSchemaContext);
+  const { schema, setSchema } = useContext(CurrentFormSchemaContext);
   const [isAiModalVisible, setIsAiModalVisible] = useState(false);
+  const [savePrompt, setSavePrompt] = useState({
+    visible: false,
+    severity: "",
+    message: "",
+  });
+  const [saving, setSaving] = useState(false);
 
   const openAiModal = () => {
     setIsAiModalVisible(true);
@@ -38,29 +50,61 @@ function FormEditor() {
           height: "100vh",
         }}
       >
-        <CircularProgress/>
+        <CircularProgress />
       </div>
     );
   }
 
-  const handleSave = () => {
-    console.log("save");
-    fetch(`${serverUri}/api/form/update/${currentFormId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((updatedData) => {
-        console.log(updatedData);
-      })
-      .catch((error) => console.error("Error updating form:", error));
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const response = await fetch(
+        `${serverUri}/api/form/update/${currentFormId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(schema),
+        }
+      );
+      const updatedData = await response.json();
+      setSavePrompt({
+        visible: true,
+        severity: "success",
+        message: "Form saved successfully",
+      });
+    } catch (error) {
+      setSavePrompt({
+        visible: true,
+        severity: "error",
+        message: "Error saving form",
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={savePrompt.visible}
+        autoHideDuration={6000}
+        onClose={() =>
+          setSavePrompt({ visible: false, severity: "", message: "" })
+        }
+      >
+        <Alert
+          onClose={() =>
+            setSavePrompt({ visible: false, severity: "", message: "" })
+          }
+          severity={savePrompt.severity}
+          variant="filled"
+        >
+          {savePrompt.message}
+        </Alert>
+      </Snackbar>
       <Box
         sx={{
           display: "flex",
@@ -78,7 +122,7 @@ function FormEditor() {
         }}
       >
         <h1>{schema["formName"]}</h1>
-        <form style={{width: "100%"}}>
+        <form style={{ width: "100%" }}>
           {schema.fields &&
             schema.fields.map((field, i) => (
               <div
@@ -89,40 +133,51 @@ function FormEditor() {
                 }}
                 key={i}
               >
-                <FormInput field={field} id={field.name}/>
+                <FormInput field={field} />
               </div>
             ))}
         </form>
-        {
-          schema.fields && schema.fields.length > 0 && (
-            <Divider sx={{width: "100%", marginY: 4, color: "#BABABA"}}>End of form</Divider>
-          )
-        }
-        <AiPromptModal/>
+        {schema.fields && schema.fields.length > 0 && (
+          <Divider sx={{ width: "100%", marginY: 4, color: "#BABABA" }}>
+            End of form
+          </Divider>
+        )}
+        <AiPromptModal />
         {schema.fields && schema.fields.length > 0 ? (
-          <Button variant="contained" onClick={handleSave}>
+          <LoadingButton
+            variant="contained"
+            onMouseDown={handleSave}
+            loading={saving}
+          >
             Save current form
-          </Button>
+          </LoadingButton>
         ) : (
           <>
             <Typography
               variant="body1"
-              sx={{marginTop: "20px", color: "gray"}}
+              sx={{ marginTop: "20px", color: "gray" }}
             >
               Start adding form elements by clicking on the items in the left
               menu.
             </Typography>
             <Typography
               variant="body1"
-              sx={{marginTop: "20px", color: "gray"}}
+              sx={{ marginTop: "20px", color: "gray" }}
             >
-              Or start using the <Button onClick={openAiModal} variant="outlined" sx={{marginX: "5px"}}>AI
-              assistant</Button> to generate a form for you.
+              Or start using the
+              <Button
+                onMouseDown={openAiModal}
+                variant="outlined"
+                sx={{ marginX: "8px" }}
+              >
+                AI assistant
+              </Button>
+              to generate a form for you.
             </Typography>
           </>
         )}
       </Box>
-      <AiPromptModal isOpen={isAiModalVisible} onClose={closeAiModal}/>
+      <AiPromptModal isOpen={isAiModalVisible} onClose={closeAiModal} />
     </>
   );
 }

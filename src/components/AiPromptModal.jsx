@@ -31,6 +31,7 @@ function AiPromptModal({ isOpen = false, onClose }) {
 
       if (Object.keys(data).length !== 0) {
         setSchema(data);
+        onClose();
       }
     } catch (error) {
       console.error("Error:", error);
@@ -49,15 +50,14 @@ function AiPromptModal({ isOpen = false, onClose }) {
           transform: "translate(-50%, -50%)",
           width: 600,
           height: 300,
-          backgroundColor: "background.default",
+          backgroundColor: "background.paper",
           border: "2px solid transparent",
           borderImage: "linear-gradient(45deg, #13b0b4, #b413b0)",
           borderImageSlice: 1,
           padding: "50px 24px",
         }}
-
       >
-        <form onSubmit={handleSubmit} autoComplete="off">
+        <form autoComplete="off">
           <TextField
             fullWidth={true}
             label="What do you want to generate? (Current form will be overwritten)"
@@ -69,17 +69,17 @@ function AiPromptModal({ isOpen = false, onClose }) {
           />
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <LoadingButton
-              type="submit"
               variant="contained"
               sx={{ marginTop: "20px" }}
               loading={isLoading}
+              onMouseDown={handleSubmit}
             >
               AI Generation
             </LoadingButton>
             <Button
               sx={{ marginTop: "20px", marginLeft: "20px" }}
               disabled={isLoading}
-              onClick={onClose}
+              onMouseDown={onClose}
             >
               Close
             </Button>

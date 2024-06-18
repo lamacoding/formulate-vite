@@ -15,30 +15,34 @@ import {
   Paper,
   Radio,
   RadioGroup,
-  Select, styled,
+  Select,
+  styled,
   TextField,
 } from "@mui/material";
-import {DatePicker} from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers";
 import MoreVertTwoToneIcon from "@mui/icons-material/MoreVertTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
-import {useState} from "react";
+import CloudUploadTwoToneIcon from "@mui/icons-material/CloudUploadTwoTone";
+import { useState } from "react";
+import { CurrentFormSchemaContext } from "./routes/FormRoute";
+import { useContext } from "react";
 
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
   height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
+  overflow: "hidden",
+  position: "absolute",
   bottom: 0,
   left: 0,
-  whiteSpace: 'nowrap',
+  whiteSpace: "nowrap",
   width: 1,
 });
 
-function FormInput({field, id}) {
+function FormInput({ field }) {
   const [anchorEl, setAnchorEl] = useState(null);
+  const { schema, setSchema } = useContext(CurrentFormSchemaContext);
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -50,7 +54,14 @@ function FormInput({field, id}) {
   };
 
   const handleDelete = () => {
-    console.log("delete " + id);
+    const index = schema.fields.findIndex(f => f.name === field.name);
+    if (index !== -1) {
+      schema.fields.splice(index, 1);
+      setSchema({...schema}); 
+    } else {
+      console.log("Field not found");
+    }
+    handleClose();
   };
 
   const renderInputField = (field) => {
@@ -61,7 +72,7 @@ function FormInput({field, id}) {
 
     switch (field.type) {
       case "label":
-        return <p style={{width: "100%"}}>{field.label}</p>;
+        return <p style={{ width: "100%" }}>{field.label}</p>;
 
       case "single-line-text":
         return (
@@ -80,6 +91,7 @@ function FormInput({field, id}) {
             id={field.name}
             type="password"
             required={isRequired}
+            fullWidth={true}
           />
         );
 
@@ -97,15 +109,18 @@ function FormInput({field, id}) {
 
       case "checkbox":
         return (
-          <FormGroup sx={{width: "100%"}}>
-            {field.options.map((option) => (
-              <FormControlLabel
-                control={<Checkbox/>}
-                label={option}
-                key={option}
-              />
-            ))}
-          </FormGroup>
+          <FormControl fullWidth={true}>
+            <FormLabel id={field.name}>{field.label}</FormLabel>
+            <FormGroup sx={{ width: "100%" }}>
+              {field.options.map((option) => (
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label={option}
+                  key={option}
+                />
+              ))}
+            </FormGroup>
+          </FormControl>
         );
 
       case "radio":
@@ -116,7 +131,7 @@ function FormInput({field, id}) {
               {field.options.map((option) => (
                 <FormControlLabel
                   value={option}
-                  control={<Radio/>}
+                  control={<Radio />}
                   label={option}
                   key={option}
                 ></FormControlLabel>
@@ -130,7 +145,7 @@ function FormInput({field, id}) {
           <DatePicker
             format="DD.MM.YYYY"
             label={field.label + (isRequired && " *")}
-            sx={{width: "100%"}}
+            sx={{ width: "100%" }}
           />
         );
 
@@ -175,17 +190,22 @@ function FormInput({field, id}) {
 
       case "file-upload":
         return (
-          <Box sx={{width: "100%"}}>
-            <Button
-              component="label"
-              role={undefined}
-              variant="contained"
-              tabIndex={-1}
-              startIcon={<CloudUploadTwoToneIcon/>}
-            >
-              Upload file
-              <VisuallyHiddenInput type="file"/>
-            </Button>
+          <Box sx={{ width: "100%" }}>
+            <FormControl>
+              <FormLabel id={field.name} sx={{ mb: 1 }}>
+                {field.label}
+              </FormLabel>
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUploadTwoToneIcon />}
+              >
+                Upload file
+                <VisuallyHiddenInput type="file" />
+              </Button>
+            </FormControl>
           </Box>
         );
 
@@ -198,34 +218,34 @@ function FormInput({field, id}) {
     <>
       {renderInputField(field)}
       <IconButton
-        id={`more-button-${id}`}
-        aria-controls={open ? `more-menu-${id}` : undefined}
+        id={`more-button-${field.name}`}
+        aria-controls={open ? `more-menu-${field.name}` : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
-        onClick={handleClick}
-        sx={{marginLeft: 2}}
+        onMouseDown={handleClick}
+        sx={{ marginLeft: 2 }}
       >
-        <MoreVertTwoToneIcon/>
+        <MoreVertTwoToneIcon />
       </IconButton>
       <Menu
-        id={`more-menu-${id}`}
+        id={`more-menu-${field.name}`}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          "aria-labelledby": `more-button-${id}`,
+          "aria-labelledby": `more-button-${field.name}`,
         }}
-        sx={{width: 320, maxWidth: "100%"}}
+        sx={{ width: 320, maxWidth: "100%" }}
       >
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
-            <EditTwoToneIcon/>
+            <EditTwoToneIcon />
           </ListItemIcon>
           Edit
         </MenuItem>
-        <MenuItem onClick={handleDelete} sx={{color: "error.main"}}>
-          <ListItemIcon sx={{color: "error.main"}}>
-            <DeleteTwoToneIcon/>
+        <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
+          <ListItemIcon sx={{ color: "error.main" }}>
+            <DeleteTwoToneIcon />
           </ListItemIcon>
           Delete
         </MenuItem>

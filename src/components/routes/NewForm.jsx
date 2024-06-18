@@ -47,7 +47,7 @@ function NewForm() {
   return (
     <Box>
       <h1>New Form</h1>
-      <form onSubmit={handleSubmit}>
+      <form>
         <Box
           sx={{
             display: "flex",
@@ -90,7 +90,7 @@ function NewForm() {
             disabled
           />
           <Box sx={{ display: "flex", alignItems: "center", width: "50%" }}>
-            <LoadingButton type="submit" variant="contained" loading={isLoading}>
+            <LoadingButton variant="contained" loading={isLoading} onMouseDown={handleSubmit}>
               Create form
             </LoadingButton>
           </Box>
