@@ -9,6 +9,7 @@ import { useState } from "react";
 function NewForm() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+
   const createForm = async (formData) => {
     try {
       const response = await fetch(`${serverUri}/api/form/create`, {
@@ -38,6 +39,9 @@ function NewForm() {
       // description: document.getElementById('form-description').value,
       // expiryDate: document.getElementById('expiry-date').value,
     };
+    if (formData.formName === "") {
+      return;
+    }
     setIsLoading(true);
     createForm(formData);
     setIsLoading(false);
@@ -47,7 +51,7 @@ function NewForm() {
   return (
     <Box>
       <h1>New Form</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <Box
           sx={{
             display: "flex",
@@ -90,7 +94,11 @@ function NewForm() {
             disabled
           />
           <Box sx={{ display: "flex", alignItems: "center", width: "50%" }}>
-            <LoadingButton variant="contained" loading={isLoading} onMouseDown={handleSubmit}>
+            <LoadingButton
+              variant="contained"
+              loading={isLoading}
+              type="submit"
+            >
               Create form
             </LoadingButton>
           </Box>
