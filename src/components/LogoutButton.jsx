@@ -34,7 +34,7 @@ export default function LogoutButton() {
         left: "50%",
         transform: "translateX(-50%)",
       }}
-      onClick={handleLogout}
+      onMouseDown={handleLogout}
     >
       Logout
     </Button>
