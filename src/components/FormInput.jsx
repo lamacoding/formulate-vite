@@ -12,7 +12,6 @@ import {
   ListItemIcon,
   Menu,
   MenuItem,
-  Paper,
   Radio,
   RadioGroup,
   Select,
@@ -27,6 +26,7 @@ import CloudUploadTwoToneIcon from "@mui/icons-material/CloudUploadTwoTone";
 import { useState } from "react";
 import { CurrentFormSchemaContext } from "./routes/FormRoute";
 import { useContext } from "react";
+import EditFormInputPrompt from "./EditFormInputPrompt";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -44,6 +44,10 @@ function FormInput({ field }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const { schema, setSchema } = useContext(CurrentFormSchemaContext);
   const open = Boolean(anchorEl);
+  const [editFormInputPrompt, setEditFormInputPrompt] = useState({
+    visible: false,
+    id: "",
+  });
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -54,10 +58,10 @@ function FormInput({ field }) {
   };
 
   const handleDelete = () => {
-    const index = schema.fields.findIndex(f => f.name === field.name);
+    const index = schema.fields.findIndex((f) => f.name === field.name);
     if (index !== -1) {
       schema.fields.splice(index, 1);
-      setSchema({...schema}); 
+      setSchema({ ...schema });
     } else {
       console.log("Field not found");
     }
@@ -237,19 +241,30 @@ function FormInput({ field }) {
         }}
         sx={{ width: 320, maxWidth: "100%" }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onMouseDown={() => {
+            setEditFormInputPrompt({ visible: true, id: field.name });
+            handleClose();
+          }}
+        >
           <ListItemIcon>
             <EditTwoToneIcon />
           </ListItemIcon>
           Edit
         </MenuItem>
-        <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
+        <MenuItem onMouseDown={handleDelete} sx={{ color: "error.main" }}>
           <ListItemIcon sx={{ color: "error.main" }}>
             <DeleteTwoToneIcon />
           </ListItemIcon>
           Delete
         </MenuItem>
       </Menu>
+      <EditFormInputPrompt
+        isOpen={editFormInputPrompt.visible}
+        onClose={() => setEditFormInputPrompt({ visible: false, id: "" })}
+        id={field.name}
+        initialValue={field.label}
+      />
     </>
   );
 }

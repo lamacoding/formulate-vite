@@ -1,5 +1,5 @@
 import React from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { Box, Button, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { serverUri } from "../../backendServerConfig";
@@ -22,7 +22,11 @@ function MyForms() {
   const [rows, setRows] = useState([]);
   const [refreshTrigger, setRefreshTrigger] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [deletePrompt, setDeletePrompt] = useState({ visible: false, id: "" });
+  const [deletePrompt, setDeletePrompt] = useState({
+    visible: false,
+    id: "",
+    formName: "",
+  });
 
   const columns = [
     { field: "id" },
@@ -43,7 +47,11 @@ function MyForms() {
             sx={{ color: "#CC0000" }}
             onMouseDown={(event) => {
               event.stopPropagation();
-              setDeletePrompt({ visible: true, id: cellValues.id });
+              setDeletePrompt({
+                visible: true,
+                id: cellValues.row.id,
+                formName: cellValues.row.formName,
+              });
             }}
           >
             <DeleteIcon />
@@ -57,7 +65,26 @@ function MyForms() {
 
   useEffect(() => {
     loadList();
-  }, [refreshTrigger]); // Depend on refreshTrigger instead of rows
+  }, [refreshTrigger]); // Depend on refreshTrigger instead of rows#
+
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarQuickFilter
+          placeholder="Search"
+          variant="standard"
+          style={{
+            width: "30%",
+            minWidth: "200px",
+            paddingBottom: "10px",
+            paddingTop: "15px",
+            paddingLeft: "5px",
+          }}
+        />
+        {/* <GridToolbarExport style={{ position: "absolute", right: "10px" }} /> */}
+      </GridToolbarContainer>
+    );
+  }
 
   const loadList = async () => {
     try {
@@ -106,9 +133,12 @@ function MyForms() {
       <DeletePrompt
         isOpen={deletePrompt.visible}
         id={deletePrompt.id}
-        onClose={() => setDeletePrompt({ visible: false, id: "" })}
+        formName={deletePrompt.formName}
+        onClose={() =>
+          setDeletePrompt({ visible: false, id: "", formName: "" })
+        }
         onDelete={() => {
-          setDeletePrompt({ visible: false, id: "" });
+          setDeletePrompt({ visible: false, id: "", formName: "" });
           refreshData();
         }}
       />
@@ -118,6 +148,9 @@ function MyForms() {
           rows={rows}
           columns={columns}
           loading={isLoading}
+          slots={{
+            toolbar: CustomToolbar,
+          }}
           initialState={{
             pagination: {
               paginationModel: {
@@ -134,7 +167,12 @@ function MyForms() {
           }}
           sx={{ cursor: "pointer", minHeight: "300px" }}
         />
-        <LoadingButton loading={isLoading} onMouseDown={refreshData} sx={{ mt: 2 }} startIcon={<CachedTwoToneIcon />}>
+        <LoadingButton
+          loading={isLoading}
+          onMouseDown={refreshData}
+          sx={{ mt: 2 }}
+          startIcon={<CachedTwoToneIcon />}
+        >
           Refresh
         </LoadingButton>
       </Box>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import FormInput from "./FormInput";
 import {
@@ -14,6 +14,7 @@ import {
   Snackbar,
   Typography,
   Alert,
+  TextField,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
@@ -27,6 +28,8 @@ function FormEditor() {
     message: "",
   });
   const [saving, setSaving] = useState(false);
+  const [isHeadingEditing, setIsHeadingEditing] = useState(false);
+  const headingInputRef = useRef(null);
 
   const openAiModal = () => {
     setIsAiModalVisible(true);
@@ -34,6 +37,24 @@ function FormEditor() {
 
   const closeAiModal = () => {
     setIsAiModalVisible(false);
+  };
+
+  const handleHeadingClick = (e) => {
+    setIsHeadingEditing(true);
+    // Wait for the component to render, timeout is needed to avoid race condition
+    setTimeout(() => {
+      if (headingInputRef.current) {
+        headingInputRef.current.focus();
+      }
+    }, 0);
+  };
+
+  const handleHeadingSave = () => {
+    setIsHeadingEditing(false);
+    schema["formName"] = schema["formName"].trim();
+    if (schema["formName"].length === 0) {
+      setSchema({ ...schema, formName: "(Untitled Form)" });
+    }
   };
 
   useEffect(() => {
@@ -121,12 +142,55 @@ function FormEditor() {
           transition: "box-shadow 0.3s",
         }}
       >
-        <h1>{schema["formName"]}</h1>
+        {isHeadingEditing ? (
+          <TextField
+            value={schema["formName"]}
+            onChange={(e) => {
+              setSchema({ ...schema, formName: e.target.value });
+            }}
+            onBlur={handleHeadingSave}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleHeadingSave();
+              }
+            }}
+            inputRef={headingInputRef}
+            sx={{
+              marginBottom: "20px",
+            }}
+            inputProps={{
+              style: {
+                textAlign: "center",
+                fontSize: "24px",
+                width: `${schema["formName"].length + 1}ch`, // Adjust width based on text length
+                minWidth: "200px",
+              },
+            }}
+          />
+        ) : (
+          <Typography
+            variant="h2"
+            sx={{
+              marginBottom: "20px",
+              padding: "10px 20px",
+              borderRadius: "10px",
+              cursor: "pointer",
+              "&:hover": {
+                color: "primary.main",
+                backgroundColor: "background.default",
+              },
+            }}
+            onMouseDown={handleHeadingClick}
+          >
+            {schema["formName"]}
+          </Typography>
+        )}
+
         <form style={{ width: "100%" }}>
           {schema.fields &&
             schema.fields.map((field, i) => (
-              <div
-                style={{
+              <Box
+                sx={{
                   marginBottom: "15px",
                   display: "flex",
                   alignItems: "center",
@@ -134,7 +198,7 @@ function FormEditor() {
                 key={i}
               >
                 <FormInput field={field} />
-              </div>
+              </Box>
             ))}
         </form>
         {schema.fields && schema.fields.length > 0 && (
