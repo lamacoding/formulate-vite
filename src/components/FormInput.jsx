@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Checkbox,
+  Divider,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -23,11 +24,15 @@ import MoreVertTwoToneIcon from "@mui/icons-material/MoreVertTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import CloudUploadTwoToneIcon from "@mui/icons-material/CloudUploadTwoTone";
+import AddCircleTwoToneIcon from "@mui/icons-material/AddCircleTwoTone";
+import RemoveCircleTwoToneIcon from "@mui/icons-material/RemoveCircleTwoTone";
 import { useState } from "react";
 import { CurrentFormSchemaContext } from "./routes/FormRoute";
 import { useContext } from "react";
 import EditFormInputPrompt from "./EditFormInputPrompt";
+import { useRef } from "react";
 
+// Used for 3-dot edit menu (from MaterialUI documentation)
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -46,14 +51,18 @@ function FormInput({ field }) {
   const open = Boolean(anchorEl);
   const [editFormInputPrompt, setEditFormInputPrompt] = useState({
     visible: false,
-    id: "",
+    field: {},
   });
+  const [labelClicked, setLabelClicked] = useState(false);
+  const [optionClicked, setOptionClicked] = useState(null);
+  const labelInputRef = useRef(null);
+  const optionInputRef = useRef(null);
 
-  const handleClick = (event) => {
+  const handleEditClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleEditClose = () => {
     setAnchorEl(null);
   };
 
@@ -63,9 +72,42 @@ function FormInput({ field }) {
       schema.fields.splice(index, 1);
       setSchema({ ...schema });
     } else {
-      console.log("Field not found");
+      console.error("Field not found");
     }
-    handleClose();
+    handleEditClose();
+  };
+
+  const handleLabelClick = () => {
+    setLabelClicked(true);
+    setTimeout(() => {
+      if (labelInputRef.current) {
+        labelInputRef.current.focus();
+      }
+    }, 0);
+  };
+
+  const handleAddOption = () => {
+    field.options.push("");
+    setSchema({ ...schema });
+  };
+
+  const handleDeleteOption = (option) => {
+    const index = field.options.findIndex((o) => o === option);
+    if (index !== -1 && field.options.length > 1) {
+      field.options.splice(index, 1);
+      setSchema({ ...schema });
+    } else {
+      console.error("Option not found");
+    }
+  };
+
+  const handleRenameOption = (option) => {
+    setOptionClicked(option);
+    setTimeout(() => {
+      if (optionInputRef.current) {
+        optionInputRef.current.focus();
+      }
+    }, 0);
   };
 
   const renderInputField = (field) => {
@@ -114,16 +156,103 @@ function FormInput({ field }) {
       case "checkbox":
         return (
           <FormControl fullWidth={true}>
-            <FormLabel id={field.name}>{field.label}</FormLabel>
-            <FormGroup sx={{ width: "100%" }}>
+            {labelClicked ? (
+              <TextField
+                id={field.name}
+                onBlur={() => setLabelClicked(false)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setLabelClicked(false);
+                  }
+                }}
+                value={field.label}
+                onChange={(e) => {
+                  field.label = e.target.value;
+                  setSchema({ ...schema });
+                }}
+                inputRef={labelInputRef}
+                sx={{ width: "400px" }}
+              >
+                {field.label}
+              </TextField>
+            ) : (
+              <FormLabel
+                id={field.name}
+                onMouseDown={handleLabelClick}
+                sx={{
+                  cursor: "pointer",
+                  marginBottom: "10px",
+                  ":hover": { color: "primary.main" },
+                }}
+              >
+                {field.label}
+              </FormLabel>
+            )}
+            <FormGroup sx={{ width: "300px" }}>
               {field.options.map((option) => (
-                <FormControlLabel
-                  control={<Checkbox />}
-                  label={option}
+                <Box
+                  sx={{ display: "flex", alignItems: "center" }}
                   key={option}
-                />
+                >
+                  {optionClicked === option ? (
+                    <TextField
+                      value={option}
+                      onBlur={() => setOptionClicked(null)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          setOptionClicked(null);
+                        }
+                      }}
+                      onChange={(e) => {
+                        const index = field.options.indexOf(option);
+                        if (index !== -1) {
+                          field.options[index] = e.target.value;
+                          setSchema({ ...schema });
+                        }
+                      }}
+                      inputRef={optionInputRef}
+                    />
+                  ) : (
+                    <>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label={option}
+                        sx={{
+                          width: "100%",
+                          cursor: "pointer",
+                        }}
+                        onClick={(e) => {
+                          e.nativeEvent.preventDefault();
+                          handleRenameOption(option);
+                        }}
+                      />
+                      <IconButton
+                        onMouseDown={() => {
+                          handleDeleteOption(option);
+                        }}
+                        sx={{
+                          width: "40px",
+                          height: "40px",
+                          color: "error.main",
+                          marginLeft: "10px",
+                        }}
+                      >
+                        <RemoveCircleTwoToneIcon />
+                      </IconButton>
+                    </>
+                  )}
+                </Box>
               ))}
             </FormGroup>
+            <Divider sx={{ width: "150px", marginY: 0, color: "#BABABA" }}>
+              <IconButton
+                onMouseDown={() => {
+                  handleAddOption();
+                }}
+              >
+                <AddCircleTwoToneIcon />
+              </IconButton>
+            </Divider>
           </FormControl>
         );
 
@@ -131,16 +260,40 @@ function FormInput({ field }) {
         return (
           <FormControl fullWidth={true}>
             <FormLabel id={field.name}>{field.label}</FormLabel>
-            <RadioGroup aria-labelledby={field.name} name={field.name}>
+            <RadioGroup
+              aria-labelledby={field.name}
+              name={field.name}
+              sx={{ width: "300px" }}
+            >
               {field.options.map((option) => (
-                <FormControlLabel
-                  value={option}
-                  control={<Radio />}
-                  label={option}
-                  key={option}
-                ></FormControlLabel>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <FormControlLabel
+                    value={option}
+                    control={<Radio />}
+                    label={option}
+                    key={option}
+                    sx={{
+                      width: "100%",
+                    }}
+                  />
+                  <IconButton
+                    sx={{
+                      width: "40px",
+                      height: "40px",
+                      color: "error.main",
+                      marginLeft: "10px",
+                    }}
+                  >
+                    <RemoveCircleTwoToneIcon />
+                  </IconButton>
+                </Box>
               ))}
             </RadioGroup>
+            <Divider sx={{ width: "150px", marginY: 0, color: "#BABABA" }}>
+              <IconButton>
+                <AddCircleTwoToneIcon />
+              </IconButton>
+            </Divider>
           </FormControl>
         );
 
@@ -148,7 +301,7 @@ function FormInput({ field }) {
         return (
           <DatePicker
             format="DD.MM.YYYY"
-            label={field.label + (isRequired && " *")}
+            label={field.label + (isRequired ? " *" : "")}
             sx={{ width: "100%" }}
           />
         );
@@ -226,7 +379,7 @@ function FormInput({ field }) {
         aria-controls={open ? `more-menu-${field.name}` : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
-        onMouseDown={handleClick}
+        onMouseDown={handleEditClick}
         sx={{ marginLeft: 2 }}
       >
         <MoreVertTwoToneIcon />
@@ -235,7 +388,7 @@ function FormInput({ field }) {
         id={`more-menu-${field.name}`}
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={handleEditClose}
         MenuListProps={{
           "aria-labelledby": `more-button-${field.name}`,
         }}
@@ -243,8 +396,8 @@ function FormInput({ field }) {
       >
         <MenuItem
           onMouseDown={() => {
-            setEditFormInputPrompt({ visible: true, id: field.name });
-            handleClose();
+            setEditFormInputPrompt({ visible: true, field: field });
+            handleEditClose();
           }}
         >
           <ListItemIcon>
@@ -261,8 +414,8 @@ function FormInput({ field }) {
       </Menu>
       <EditFormInputPrompt
         isOpen={editFormInputPrompt.visible}
-        onClose={() => setEditFormInputPrompt({ visible: false, id: "" })}
-        id={field.name}
+        onClose={() => setEditFormInputPrompt({ visible: false, field: {} })}
+        field={editFormInputPrompt.field}
         initialValue={field.label}
       />
     </>

@@ -39,7 +39,7 @@ function FormEditor() {
     setIsAiModalVisible(false);
   };
 
-  const handleHeadingClick = (e) => {
+  const handleHeadingClick = () => {
     setIsHeadingEditing(true);
     // Wait for the component to render, timeout is needed to avoid race condition
     setTimeout(() => {
@@ -58,7 +58,7 @@ function FormEditor() {
   };
 
   useEffect(() => {
-    console.log("Schema has changed.");
+    console.debug("Schema has changed.");
   }, [schema]);
 
   if (!schema) {

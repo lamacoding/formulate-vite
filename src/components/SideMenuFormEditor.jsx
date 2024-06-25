@@ -25,6 +25,7 @@ import ArrowDropDownTwoToneIcon from "@mui/icons-material/ArrowDropDownTwoTone";
 import FileUploadTwoToneIcon from "@mui/icons-material/FileUploadTwoTone";
 import AutoAwesomeTwoToneIcon from "@mui/icons-material/AutoAwesomeTwoTone";
 import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
+import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
 
 import AiPromptModal from "./AiPromptModal";
 import LogoutButton from "./LogoutButton";
@@ -61,6 +62,19 @@ function SideMenuFormEditor() {
           label: "Enter label text",
           name: "single-line-text" + (schema.fields ? schema.fields.length : 0),
           type: "single-line-text",
+          validation: {
+            message: "Invalid input",
+            pattern: ".*",
+            isRequired: false,
+          },
+        };
+        break;
+
+      case "password":
+        newComponent = {
+          label: "Enter label text",
+          name: "password" + (schema.fields ? schema.fields.length : 0),
+          type: "password",
           validation: {
             message: "Invalid input",
             pattern: ".*",
@@ -136,7 +150,9 @@ function SideMenuFormEditor() {
       case "multi-select-dropdown":
         newComponent = {
           label: "Enter label text",
-          name: "multi-select-dropdown" + (schema.fields ? schema.fields.length : 0),
+          name:
+            "multi-select-dropdown" +
+            (schema.fields ? schema.fields.length : 0),
           type: "multi-select-dropdown",
           options: ["Option 1", "Option 2", "Option 3"],
           validation: {
@@ -162,10 +178,10 @@ function SideMenuFormEditor() {
       default:
         throw new Error("Invalid input type");
     }
-    setSchema(prevSchema => ({
+    setSchema((prevSchema) => ({
       ...prevSchema,
-      fields: [...(prevSchema.fields || []), newComponent]
-  }));
+      fields: [...(prevSchema.fields || []), newComponent],
+    }));
   };
 
   const menuWidth = 300;
@@ -214,6 +230,21 @@ function SideMenuFormEditor() {
           >
             <ListItemText
               primary="Single line input"
+              sx={{ paddingLeft: "10px", color: "text.secondary" }}
+              disableTypography
+            />
+          </Button>
+        </ListItem>
+
+        <ListItem>
+          <Button
+            className="side-menu-item add-form-input"
+            startIcon={<LockTwoToneIcon />}
+            size="large"
+            onMouseDown={() => addFormInput("password")}
+          >
+            <ListItemText
+              primary="Password"
               sx={{ paddingLeft: "10px", color: "text.secondary" }}
               disableTypography
             />
@@ -302,7 +333,7 @@ function SideMenuFormEditor() {
         {/*    onClick={() => addFormInput("multi-select-dropdown")}*/}
         {/*  >*/}
         {/*    <ListItemText*/}
-        {/*      primary="Multi-Select Dropdown"*/}
+        {/*      primary="Multi-Dropdown"*/}
         {/*      sx={{ paddingLeft: "10px", color: "text.secondary" }}*/}
         {/*      disableTypography*/}
         {/*    />*/}

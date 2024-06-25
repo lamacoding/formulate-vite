@@ -39,6 +39,7 @@ export default function EditFormInputPrompt({
           label="Set label"
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          sx={{ width: "400px" }}
         />
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <LoadingButton
