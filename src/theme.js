@@ -16,6 +16,7 @@ export const lightTheme = createTheme({
     background: {
       default: "#F5F5F5",
       paper: "#FFFFFF",
+      inputElement: "#F5F5F5",
     },
     text: {
       primary: "#333333",
@@ -113,6 +114,7 @@ export const darkTheme = createTheme({
     background: {
       default: "rgb(22, 28, 36)",
       paper: "rgb(33, 43, 54)",
+      inputElement: "#293544",
     },
     text: {
       primary: "#FFFFFF",
@@ -125,7 +127,6 @@ export const darkTheme = createTheme({
     fontFamily: ["PublicSans", "Inter", "sans-serif"].join(","),
     h1: {
       fontSize: "2.5rem",
-
       fontWeight: 700,
       color: "#FFFFFF",
     },

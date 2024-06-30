@@ -9,178 +9,75 @@ import {
 } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import {
-  CurrentFormContext,
   CurrentFormSchemaContext,
 } from "./routes/FormRoute";
 import Logo from "../assets/logo.svg";
 
-import TextFieldsTwoToneIcon from "@mui/icons-material/TextFieldsTwoTone";
-import Crop75TwoToneIcon from "@mui/icons-material/Crop75TwoTone";
-import Crop169TwoToneIcon from "@mui/icons-material/Crop169TwoTone";
-import CheckBoxTwoToneIcon from "@mui/icons-material/CheckBoxTwoTone";
-import RadioButtonCheckedTwoToneIcon from "@mui/icons-material/RadioButtonCheckedTwoTone";
-import DateRangeTwoToneIcon from "@mui/icons-material/DateRangeTwoTone";
-import ArrowDropDownTwoToneIcon from "@mui/icons-material/ArrowDropDownTwoTone";
-// import ArrowDropDownCircleTwoToneIcon from "@mui/icons-material/ArrowDropDownCircleTwoTone";
-import FileUploadTwoToneIcon from "@mui/icons-material/FileUploadTwoTone";
-import AutoAwesomeTwoToneIcon from "@mui/icons-material/AutoAwesomeTwoTone";
-import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
-import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
+import {
+  TextFieldsTwoTone as TextFieldsTwoToneIcon,
+  Crop75TwoTone as Crop75TwoToneIcon,
+  Crop169TwoTone as Crop169TwoToneIcon,
+  CheckBoxTwoTone as CheckBoxTwoToneIcon,
+  RadioButtonCheckedTwoTone as RadioButtonCheckedTwoToneIcon,
+  DateRangeTwoTone as DateRangeTwoToneIcon,
+  ArrowDropDownTwoTone as ArrowDropDownTwoToneIcon,
+  FileUploadTwoTone as FileUploadTwoToneIcon,
+  AutoAwesomeTwoTone as AutoAwesomeTwoToneIcon,
+  HomeTwoTone as HomeTwoToneIcon,
+  LockTwoTone as LockTwoToneIcon,
+} from "@mui/icons-material";
+
+import { v4 as uuidv4 } from 'uuid';
 
 import AiPromptModal from "./AiPromptModal";
 import LogoutButton from "./LogoutButton";
 import { useNavigate } from "react-router-dom";
 
+const inputComponents = [
+  { type: "label", label: "Label", icon: TextFieldsTwoToneIcon },
+  { type: "single-line-text", label: "Single line input", icon: Crop169TwoToneIcon },
+  { type: "password", label: "Password", icon: LockTwoToneIcon },
+  { type: "multi-line-text", label: "Multi line input", icon: Crop75TwoToneIcon },
+  { type: "checkbox", label: "Checkbox", icon: CheckBoxTwoToneIcon },
+  { type: "radio", label: "Radio", icon: RadioButtonCheckedTwoToneIcon },
+  { type: "date", label: "Date", icon: DateRangeTwoToneIcon },
+  { type: "dropdown", label: "Dropdown", icon: ArrowDropDownTwoToneIcon },
+  { type: "file-upload", label: "File upload", icon: FileUploadTwoToneIcon },
+];
+
 function SideMenuFormEditor() {
   const navigate = useNavigate();
-  // const currentFormId = useContext(CurrentFormContext);
   const { schema, setSchema } = useContext(CurrentFormSchemaContext);
   const [isAiModalVisible, setIsAiModalVisible] = useState(false);
 
-  const openAiModal = () => {
-    setIsAiModalVisible(true);
-  };
+  const openAiModal = () => setIsAiModalVisible(true);
+  const closeAiModal = () => setIsAiModalVisible(false);
 
-  const closeAiModal = () => {
-    setIsAiModalVisible(false);
-  };
+  const generateOptionsWithId = (options) => options.map((option, index) => ({ ...option, id: uuidv4() }));
 
   const addFormInput = (component) => {
-    let newComponent = null;
+    const baseComponent = {
+      label: component.label,
+      name: `${component.type}${schema.fields ? schema.fields.length : 0}`,
+      type: component.type,
+      validation: {
+        message: "Invalid input",
+        pattern: ".*",
+        isRequired: false,
+      },
+    };
 
-    switch (component) {
-      case "label":
-        newComponent = {
-          label: "Enter label text",
-          name: "label" + (schema.fields ? schema.fields.length : 0),
-          type: "label",
-        };
-        break;
-
-      case "single-line-text":
-        newComponent = {
-          label: "Enter label text",
-          name: "single-line-text" + (schema.fields ? schema.fields.length : 0),
-          type: "single-line-text",
-          validation: {
-            message: "Invalid input",
-            pattern: ".*",
-            isRequired: false,
-          },
-        };
-        break;
-
-      case "password":
-        newComponent = {
-          label: "Enter label text",
-          name: "password" + (schema.fields ? schema.fields.length : 0),
-          type: "password",
-          validation: {
-            message: "Invalid input",
-            pattern: ".*",
-            isRequired: false,
-          },
-        };
-        break;
-
-      case "multi-line-text":
-        newComponent = {
-          label: "Enter label text",
-          name: "multi-line-text" + (schema.fields ? schema.fields.length : 0),
-          type: "multi-line-text",
-          validation: {
-            message: "Invalid input",
-            pattern: ".*",
-            isRequired: false,
-          },
-        };
-        break;
-
-      case "checkbox":
-        newComponent = {
-          label: "Enter label text",
-          name: "checkbox" + (schema.fields ? schema.fields.length : 0),
-          type: "checkbox",
-          options: ["Option 1", "Option 2", "Option 3"],
-          validation: {
-            message: "Invalid input",
-            isRequired: false,
-          },
-        };
-        break;
-
-      case "radio":
-        newComponent = {
-          label: "Enter label text",
-          name: "radio" + (schema.fields ? schema.fields.length : 0),
-          type: "radio",
-          options: ["Option 1", "Option 2", "Option 3"],
-          validation: {
-            message: "Invalid input",
-            isRequired: false,
-          },
-        };
-        break;
-
-      case "date":
-        newComponent = {
-          label: "Enter label text",
-          name: "date" + (schema.fields ? schema.fields.length : 0),
-          type: "date",
-          validation: {
-            message: "Invalid input",
-            isRequired: false,
-          },
-        };
-        break;
-
-      case "dropdown":
-        newComponent = {
-          label: "Enter label text",
-          name: "dropdown" + (schema.fields ? schema.fields.length : 0),
-          type: "dropdown",
-          options: ["Option 1", "Option 2", "Option 3"],
-          validation: {
-            message: "Invalid input",
-            isRequired: false,
-          },
-        };
-        break;
-
-      case "multi-select-dropdown":
-        newComponent = {
-          label: "Enter label text",
-          name:
-            "multi-select-dropdown" +
-            (schema.fields ? schema.fields.length : 0),
-          type: "multi-select-dropdown",
-          options: ["Option 1", "Option 2", "Option 3"],
-          validation: {
-            message: "Invalid input",
-            isRequired: false,
-          },
-        };
-        break;
-
-      case "file-upload":
-        newComponent = {
-          label: "Enter label text",
-          name: "file-upload" + (schema.fields ? schema.fields.length : 0),
-          type: "file-upload",
-          validation: {
-            message: "Invalid input",
-            "file-types": ["*"],
-            isRequired: false,
-          },
-        };
-        break;
-
-      default:
-        throw new Error("Invalid input type");
+    if (["checkbox", "radio", "dropdown", "multi-select-dropdown"].includes(component.type)) {
+      baseComponent.options = generateOptionsWithId([{ value: "Option 1" }, { value: "Option 2" }, { value: "Option 3" }]);
     }
+
+    if (component.type === "file-upload") {
+      baseComponent.validation["file-types"] = ["*"];
+    }
+
     setSchema((prevSchema) => ({
       ...prevSchema,
-      fields: [...(prevSchema.fields || []), newComponent],
+      fields: [...(prevSchema.fields || []), baseComponent],
     }));
   };
 
@@ -206,154 +103,22 @@ function SideMenuFormEditor() {
 
         <Divider sx={{ marginY: "20px" }} />
         <ListItem className="side-menu-heading">Input elements</ListItem>
-        <ListItem>
-          <Button
-            className="side-menu-item add-form-input"
-            startIcon={<TextFieldsTwoToneIcon />}
-            size="large"
-            onMouseDown={() => addFormInput("label")}
-          >
-            <ListItemText
-              primary="Label"
-              sx={{ paddingLeft: "10px", color: "text.secondary" }}
-              disableTypography
-            />
-          </Button>
-        </ListItem>
-
-        <ListItem>
-          <Button
-            className="side-menu-item add-form-input"
-            startIcon={<Crop169TwoToneIcon />}
-            size="large"
-            onMouseDown={() => addFormInput("single-line-text")}
-          >
-            <ListItemText
-              primary="Single line input"
-              sx={{ paddingLeft: "10px", color: "text.secondary" }}
-              disableTypography
-            />
-          </Button>
-        </ListItem>
-
-        <ListItem>
-          <Button
-            className="side-menu-item add-form-input"
-            startIcon={<LockTwoToneIcon />}
-            size="large"
-            onMouseDown={() => addFormInput("password")}
-          >
-            <ListItemText
-              primary="Password"
-              sx={{ paddingLeft: "10px", color: "text.secondary" }}
-              disableTypography
-            />
-          </Button>
-        </ListItem>
-
-        <ListItem>
-          <Button
-            className="side-menu-item add-form-input"
-            startIcon={<Crop75TwoToneIcon />}
-            size="large"
-            onMouseDown={() => addFormInput("multi-line-text")}
-          >
-            <ListItemText
-              primary="Multi line input"
-              sx={{ paddingLeft: "10px", color: "text.secondary" }}
-              disableTypography
-            />
-          </Button>
-        </ListItem>
-        <ListItem>
-          <Button
-            className="side-menu-item add-form-input"
-            startIcon={<CheckBoxTwoToneIcon />}
-            size="large"
-            onMouseDown={() => addFormInput("checkbox")}
-          >
-            <ListItemText
-              primary="Checkbox"
-              sx={{ paddingLeft: "10px", color: "text.secondary" }}
-              disableTypography
-            />
-          </Button>
-        </ListItem>
-
-        <ListItem>
-          <Button
-            className="side-menu-item add-form-input"
-            startIcon={<RadioButtonCheckedTwoToneIcon />}
-            size="large"
-            onMouseDown={() => addFormInput("radio")}
-          >
-            <ListItemText
-              primary="Radio"
-              sx={{ paddingLeft: "10px", color: "text.secondary" }}
-              disableTypography
-            />
-          </Button>
-        </ListItem>
-
-        <ListItem>
-          <Button
-            className="side-menu-item add-form-input"
-            startIcon={<DateRangeTwoToneIcon />}
-            size="large"
-            onMouseDown={() => addFormInput("date")}
-          >
-            <ListItemText
-              primary="Date"
-              sx={{ paddingLeft: "10px", color: "text.secondary" }}
-              disableTypography
-            />
-          </Button>
-        </ListItem>
-
-        <ListItem>
-          <Button
-            className="side-menu-item add-form-input"
-            startIcon={<ArrowDropDownTwoToneIcon />}
-            size="large"
-            onMouseDown={() => addFormInput("dropdown")}
-          >
-            <ListItemText
-              primary="Dropdown"
-              sx={{ paddingLeft: "10px", color: "text.secondary" }}
-              disableTypography
-            />
-          </Button>
-        </ListItem>
-
-        {/*<ListItem>*/}
-        {/*  <Button*/}
-        {/*    className="side-menu-item add-form-input"*/}
-        {/*    startIcon={<ArrowDropDownCircleTwoToneIcon />}*/}
-        {/*    size="large"*/}
-        {/*    onClick={() => addFormInput("multi-select-dropdown")}*/}
-        {/*  >*/}
-        {/*    <ListItemText*/}
-        {/*      primary="Multi-Dropdown"*/}
-        {/*      sx={{ paddingLeft: "10px", color: "text.secondary" }}*/}
-        {/*      disableTypography*/}
-        {/*    />*/}
-        {/*  </Button>*/}
-        {/*</ListItem>*/}
-
-        <ListItem>
-          <Button
-            className="side-menu-item add-form-input"
-            startIcon={<FileUploadTwoToneIcon />}
-            size="large"
-            onMouseDown={() => addFormInput("file-upload")}
-          >
-            <ListItemText
-              primary="File-Upload"
-              sx={{ paddingLeft: "10px", color: "text.secondary" }}
-              disableTypography
-            />
-          </Button>
-        </ListItem>
+        {inputComponents.map((component) => (
+          <ListItem key={component.type}>
+            <Button
+              className="side-menu-item add-form-input"
+              startIcon={<component.icon />}
+              size="large"
+              onMouseDown={() => addFormInput(component)}
+            >
+              <ListItemText
+                primary={component.label}
+                sx={{ paddingLeft: "10px", color: "text.secondary" }}
+                disableTypography
+              />
+            </Button>
+          </ListItem>
+        ))}
 
         <Divider sx={{ marginY: "20px" }} />
         <ListItem className="side-menu-heading">Premium features</ListItem>
@@ -362,7 +127,7 @@ function SideMenuFormEditor() {
             className="side-menu-item"
             startIcon={<AutoAwesomeTwoToneIcon />}
             size="large"
-            onMouseDown={() => openAiModal()}
+            onMouseDown={openAiModal}
           >
             <ListItemText
               primary="AI Assistant"
@@ -383,13 +148,11 @@ function SideMenuFormEditor() {
         variant="permanent"
         open
         anchor="left"
-        ModalProps={{
-          keepMounted: true,
-        }}
+        ModalProps={{ keepMounted: true }}
         sx={{
           width: menuWidth,
           flexShrink: 0,
-          "& .MuiDrawer-paper": { width: menuWidth, overflowX: "hidden" }, // Ensure horizontal overflow is hidden for Drawer paper
+          "& .MuiDrawer-paper": { width: menuWidth, overflowX: "hidden" },
         }}
       >
         <img

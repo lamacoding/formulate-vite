@@ -31,6 +31,7 @@ import { CurrentFormSchemaContext } from "./routes/FormRoute";
 import { useContext } from "react";
 import EditFormInputPrompt from "./EditFormInputPrompt";
 import { useRef } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 // Used for 3-dot edit menu (from MaterialUI documentation)
 const VisuallyHiddenInput = styled("input")({
@@ -54,9 +55,7 @@ function FormInput({ field }) {
     field: {},
   });
   const [labelClicked, setLabelClicked] = useState(false);
-  const [optionClicked, setOptionClicked] = useState(null);
   const labelInputRef = useRef(null);
-  const optionInputRef = useRef(null);
 
   const handleEditClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -87,7 +86,8 @@ function FormInput({ field }) {
   };
 
   const handleAddOption = () => {
-    field.options.push("");
+    const uniqueId = uuidv4();
+    field.options.push({ id: uniqueId, value: "Option" });
     setSchema({ ...schema });
   };
 
@@ -97,17 +97,12 @@ function FormInput({ field }) {
       field.options.splice(index, 1);
       setSchema({ ...schema });
     } else {
-      console.error("Option not found");
-    }
-  };
-
-  const handleRenameOption = (option) => {
-    setOptionClicked(option);
-    setTimeout(() => {
-      if (optionInputRef.current) {
-        optionInputRef.current.focus();
+      if (field.options.length === 1) {
+        console.debug("Cannot delete last option");
+      } else {
+        console.debug("Option not found");
       }
-    }, 0);
+    }
   };
 
   const renderInputField = (field) => {
@@ -192,55 +187,29 @@ function FormInput({ field }) {
               {field.options.map((option) => (
                 <Box
                   sx={{ display: "flex", alignItems: "center" }}
-                  key={option}
+                  key={option.id}
                 >
-                  {optionClicked === option ? (
-                    <TextField
-                      value={option}
-                      onBlur={() => setOptionClicked(null)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          setOptionClicked(null);
-                        }
-                      }}
-                      onChange={(e) => {
-                        const index = field.options.indexOf(option);
-                        if (index !== -1) {
-                          field.options[index] = e.target.value;
-                          setSchema({ ...schema });
-                        }
-                      }}
-                      inputRef={optionInputRef}
-                    />
-                  ) : (
-                    <>
-                      <FormControlLabel
-                        control={<Checkbox />}
-                        label={option}
-                        sx={{
-                          width: "100%",
-                          cursor: "pointer",
-                        }}
-                        onClick={(e) => {
-                          e.nativeEvent.preventDefault();
-                          handleRenameOption(option);
-                        }}
-                      />
-                      <IconButton
-                        onMouseDown={() => {
-                          handleDeleteOption(option);
-                        }}
-                        sx={{
-                          width: "40px",
-                          height: "40px",
-                          color: "error.main",
-                          marginLeft: "10px",
-                        }}
-                      >
-                        <RemoveCircleTwoToneIcon />
-                      </IconButton>
-                    </>
-                  )}
+                  <FormControlLabel
+                    control={<Checkbox />}
+                    label={option.value}
+                    sx={{
+                      width: "100%",
+                      cursor: "pointer",
+                    }}
+                  />
+                  <IconButton
+                    onMouseDown={() => {
+                      handleDeleteOption(option);
+                    }}
+                    sx={{
+                      width: "40px",
+                      height: "40px",
+                      color: "error.main",
+                      marginLeft: "10px",
+                    }}
+                  >
+                    <RemoveCircleTwoToneIcon />
+                  </IconButton>
                 </Box>
               ))}
             </FormGroup>
@@ -268,10 +237,10 @@ function FormInput({ field }) {
               {field.options.map((option) => (
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <FormControlLabel
-                    value={option}
+                    value={option.value}
                     control={<Radio />}
-                    label={option}
-                    key={option}
+                    label={option.value}
+                    key={option.id}
                     sx={{
                       width: "100%",
                     }}
@@ -316,8 +285,8 @@ function FormInput({ field }) {
               label={field.label}
             >
               {field.options.map((option, index) => (
-                <MenuItem value={option} key={index}>
-                  {option}
+                <MenuItem value={option.value} key={option.id}>
+                  {option.value}
                 </MenuItem>
               ))}
             </Select>
@@ -372,7 +341,18 @@ function FormInput({ field }) {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        borderRadius: "10px",
+        backgroundColor: "background.inputElement",
+        width: "100%",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingX: "40px",
+        paddingY: "20px",
+      }}
+    >
       {renderInputField(field)}
       <IconButton
         id={`more-button-${field.name}`}
@@ -380,7 +360,12 @@ function FormInput({ field }) {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onMouseDown={handleEditClick}
-        sx={{ marginLeft: 2 }}
+        sx={{
+          marginLeft: 2,
+          width: "40px",
+          height: "40px",
+          marginY: "auto",
+        }}
       >
         <MoreVertTwoToneIcon />
       </IconButton>
@@ -415,10 +400,9 @@ function FormInput({ field }) {
       <EditFormInputPrompt
         isOpen={editFormInputPrompt.visible}
         onClose={() => setEditFormInputPrompt({ visible: false, field: {} })}
-        field={editFormInputPrompt.field}
-        initialValue={field.label}
+        field={field}
       />
-    </>
+    </Box>
   );
 }
 
