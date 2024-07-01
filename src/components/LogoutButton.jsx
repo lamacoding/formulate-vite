@@ -30,9 +30,9 @@ export default function LogoutButton() {
       color="error"
       sx={{
         position: "absolute",
-        bottom: "40px",
         left: "50%",
         transform: "translateX(-50%)",
+        marginTop: "20px",
       }}
       onMouseDown={handleLogout}
     >

@@ -17,6 +17,7 @@ import {
   RadioGroup,
   Select,
   styled,
+  Switch,
   TextField,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -31,7 +32,8 @@ import { CurrentFormSchemaContext } from "./routes/FormRoute";
 import { useContext } from "react";
 import EditFormInputPrompt from "./EditFormInputPrompt";
 import { useRef } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
+import { Swipe } from "@mui/icons-material";
 
 // Used for 3-dot edit menu (from MaterialUI documentation)
 const VisuallyHiddenInput = styled("input")({
@@ -353,7 +355,24 @@ function FormInput({ field }) {
         paddingY: "20px",
       }}
     >
-      {renderInputField(field)}
+      <Box>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={field.validation.isRequired}
+              onChange={(e) => {
+                field.validation.isRequired = e.target.checked;
+                setSchema({ ...schema });
+              }}
+            />
+          }
+          label="Required"
+          sx={{
+            marginBottom: "20px",
+          }}
+        />
+        {renderInputField(field)}
+      </Box>
       <IconButton
         id={`more-button-${field.name}`}
         aria-controls={open ? `more-menu-${field.name}` : undefined}

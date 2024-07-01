@@ -84,7 +84,7 @@ function SideMenuFormEditor() {
   const menuWidth = 300;
 
   const DrawerList = (
-    <Box sx={{ width: menuWidth, height: "100vh" }} role="presentation">
+    <Box sx={{ overflow: "hidden", height: "100vh" }} role="presentation">
       <List>
         <ListItem>
           <Button
