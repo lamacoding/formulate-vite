@@ -15,6 +15,7 @@ const DashboardRoute = lazy(() => import("./components/routes/DashboardRoute"));
 const FormRoute = lazy(() => import("./components/routes/FormRoute"));
 const NewForm = lazy(() => import("./components/routes/NewForm"));
 const MyForms = lazy(() => import("./components/routes/MyForms"));
+const PreviewRoute = lazy(() => import("./components/routes/PreviewRoute"));
 
 function App() {
   const [theme, setTheme] = useState(
@@ -41,6 +42,7 @@ function App() {
                 <Route index path="*" element={<MyForms/>}/>
               </Route>
               <Route path="/form/:id" element={<FormRoute/>}/>
+              <Route path="/preview/:id" element={<PreviewRoute/>}/>
             </Route>
           </Routes>
         </BrowserRouter>

@@ -33,7 +33,6 @@ import { useContext } from "react";
 import EditFormInputPrompt from "./EditFormInputPrompt";
 import { useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Swipe } from "@mui/icons-material";
 
 // Used for 3-dot edit menu (from MaterialUI documentation)
 const VisuallyHiddenInput = styled("input")({
@@ -181,6 +180,7 @@ function FormInput({ field }) {
                   marginBottom: "10px",
                   ":hover": { color: "primary.main" },
                 }}
+                required={isRequired}
               >
                 {field.label}
               </FormLabel>
@@ -230,7 +230,37 @@ function FormInput({ field }) {
       case "radio":
         return (
           <FormControl fullWidth={true}>
-            <FormLabel id={field.name}>{field.label}</FormLabel>
+            {labelClicked ? (
+              <TextField
+                id={field.name}
+                onBlur={() => setLabelClicked(false)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setLabelClicked(false);
+                  }
+                }}
+                value={field.label}
+                onChange={(e) => {
+                  field.label = e.target.value;
+                  setSchema({ ...schema });
+                }}
+                inputRef={labelInputRef}
+                sx={{ width: "400px" }}
+              />
+            ) : (
+              <FormLabel
+                id={field.name}
+                required={isRequired}
+                onMouseDown={handleLabelClick}
+                sx={{
+                  cursor: "pointer",
+                  marginBottom: "10px",
+                  ":hover": { color: "primary.main" },
+                }}
+              >
+                {field.label}
+              </FormLabel>
+            )}
             <RadioGroup
               aria-labelledby={field.name}
               name={field.name}
@@ -261,7 +291,11 @@ function FormInput({ field }) {
               ))}
             </RadioGroup>
             <Divider sx={{ width: "150px", marginY: 0, color: "#BABABA" }}>
-              <IconButton>
+              <IconButton
+                onMouseDown={() => {
+                  handleAddOption();
+                }}
+              >
                 <AddCircleTwoToneIcon />
               </IconButton>
             </Divider>
@@ -280,7 +314,9 @@ function FormInput({ field }) {
       case "dropdown":
         return (
           <FormControl fullWidth={true}>
-            <InputLabel id={"label-" + field.name}>{field.label}</InputLabel>
+            <InputLabel id={"label-" + field.name} required={isRequired}>
+              {field.label}
+            </InputLabel>
             <Select
               labelId={"label-" + field.name}
               id={field.name}
@@ -320,7 +356,7 @@ function FormInput({ field }) {
         return (
           <Box sx={{ width: "100%" }}>
             <FormControl>
-              <FormLabel id={field.name} sx={{ mb: 1 }}>
+              <FormLabel id={field.name} sx={{ mb: 1 }} required={isRequired}>
                 {field.label}
               </FormLabel>
               <Button
@@ -346,7 +382,7 @@ function FormInput({ field }) {
     <Box
       sx={{
         borderRadius: "10px",
-        backgroundColor: "background.inputElement",
+        backgroundColor: "background.paper",
         width: "100%",
         display: "flex",
         flexDirection: "row",

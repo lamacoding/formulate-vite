@@ -54,7 +54,7 @@ export default function EditFormInputPrompt({
           sx={{ width: "400px" }}
         />
         <Box sx={{ display: "flex", flexDirection: "column" }}>
-        {(field.type === "checkbox" || field.type === "radio") && (
+        {(field.type === "checkbox" || field.type === "radio" || field.type === "dropdown") && (
           <>
           <Divider sx={{ marginTop: "20px", color: "#BABABA" }}>Options</Divider>
           {field.options.map((option, index) => (

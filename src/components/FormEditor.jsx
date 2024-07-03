@@ -17,6 +17,8 @@ import {
   TextField,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+import VisibilityTwoToneIcon from "@mui/icons-material/VisibilityTwoTone";
+import { useNavigate } from "react-router-dom";
 
 function FormEditor() {
   const currentFormId = useContext(CurrentFormContext);
@@ -30,6 +32,7 @@ function FormEditor() {
   const [saving, setSaving] = useState(false);
   const [isHeadingEditing, setIsHeadingEditing] = useState(false);
   const headingInputRef = useRef(null);
+  const navigate = useNavigate();
 
   const openAiModal = () => {
     setIsAiModalVisible(true);
@@ -105,9 +108,18 @@ function FormEditor() {
       setSaving(false);
     }
   };
-
   return (
     <>
+      <Button
+        variant="contained"
+        startIcon={<VisibilityTwoToneIcon />}
+        sx={{ position: "fixed", top: "20px", left: "320px" }}
+        onClick={() => {
+          navigate(`/preview/${currentFormId}`);
+        }}
+      >
+        Preview
+      </Button>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={savePrompt.visible}
@@ -130,11 +142,12 @@ function FormEditor() {
         sx={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
+          alignItems: "left",
           justifyContent: "center",
           margin: "0 auto",
           width: "70%",
-          backgroundColor: "background.paper",
+          maxWidth: "1000px",
+          backgroundColor: "transparent",
           border: "0px solid",
           borderColor: "primary.main",
           borderRadius: "20px",
